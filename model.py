@@ -14,8 +14,8 @@ class Model:
         response = requests.get(url, params=parameters)
         if response.status_code == 200:
             data = response.json()
-            return data  
-        
+            return data
+        print(f"Error: {response.status_code}")
     
 
 
