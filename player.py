@@ -1,24 +1,91 @@
 import json
+import inspect
 
-from inspect import getmembers
+class Coin:
+    def __init__(self, type, value):
+        self.type = type
+        self.value = value
+        self.amount = 0
 
-class Player:
-    def __init__(self, **kwargs):
-        self.name = kwargs["name"]
-        self.coins = kwargs["coins"]
-        self.data = {
-            "name": self.name,
-            "coins": self.coins
+    def saveDict(self):
+        return {
+            "type": self.type,
+            "value": self.value,
+            "amount": self.amount
         }
 
+    def fromDict(self, d):
+        self.type = d["type"]
+        self.value = d["value"]
+        self.amount = d["amount"]
+
+    def __str__(self):
+        return str(self.saveDict())
+
+class Player:
+    def __init__(self, name, money):
+        self.name = name
+        self.money = money
+        self.coins = dict()
+        self.history = []
+
+    def update(self, coin):
+        self.coins[coin.type] = coin.saveDict()
+        if coin.amount <= 0:
+            self.coins.pop(coin.type)
+            self.history.append(f"Removing {coin.type.upper()} from {self.name.upper()}'s player data given that {coin.type.upper()}.amount = 0")
 
 
+    def invest(self, coin: Coin, amount):
+        coin.amount = amount
+        self.update(coin)
+        self.money -= amount * coin.value
+
+        self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} units for {coin.value}")
+
+    def sell(self, new_coin: Coin, amount):
+        old_data = self.coins[new_coin.type]
+        (old_coin := Coin(0, 0)).fromDict(old_data)
+
+        old_money = self.money
+        self.money += amount * new_coin.value
+
+        self.history.append(f"{self.name.upper()} sold {amount} units of {old_coin.type.upper()} for {new_coin.value}. I.e a profit of {amount * new_coin.value - old_coin.amount * old_coin.value}")
+
+        old_coin.amount -= amount
+        self.update(old_coin)
+
+
+    def printLog(self):
+        str = "  #  | Transaction history of {}".format(self.name.capitalize())
+        print(str)
+        for i in range(len(max(self.history)) + 7):
+            print("-" if i != 5 else "+", end="")
+        print(" ")
+
+        for k, log in enumerate(self.history):
+            print(f"[{k:02}] | {log}")
+
+
+
+
+    def prep_data(self):
+        data = {}
+        for i in inspect.getmembers(self):
+            if not i[0].startswith('_'):
+                if not inspect.ismethod(i[1]):
+                    data[i[0]] = i[1]
+
+        return data
     def load_from_file(self, file):
         with open(file, "r") as f:
             self.data = json.load(f)
             f.close()
 
-    def save_to_file(self, out):
-        with open(out, "w") as f:
-            f.write(json.dumps(self.data, indent=4))
+    def save_to_file(self):
+        with open(f"{self.name}_playerdata.json", "w") as f:
+            f.write(json.dumps(self.prep_data(), indent=4))
             f.close()
+
+    def __str__(self):
+        return str(self.prep_data())
