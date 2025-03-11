@@ -41,18 +41,18 @@ class Player:
         self.update(coin)
         self.money -= amount * coin.value
 
-        self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} units for {coin.value}")
+        self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} unit(s) for {coin.value}")
 
     def sell(self, new_coin: Coin, amount):
         old_data = self.coins[new_coin.type]
         (old_coin := Coin(0, 0)).fromDict(old_data)
 
-        old_money = self.money
         self.money += amount * new_coin.value
 
-        self.history.append(f"{self.name.upper()} sold {amount} units of {old_coin.type.upper()} for {new_coin.value}. I.e a profit of {amount * new_coin.value - old_coin.amount * old_coin.value}")
+        self.history.append(f"{self.name.upper()} sold {amount} unit(s) of {old_coin.type.upper()} for {new_coin.value}. I.e a profit of {amount * new_coin.value - amount * old_coin.value}")
 
         old_coin.amount -= amount
+        old_coin.value = new_coin.value
         self.update(old_coin)
 
 
@@ -64,9 +64,7 @@ class Player:
         print(" ")
 
         for k, log in enumerate(self.history):
-            print(f"[{k:02}] | {log}")
-
-
+            print(f"\x1b[{(k%17)+32}m[{k:02}] | {log}\x1b[0m")
 
 
     def prep_data(self):
