@@ -67,7 +67,7 @@ class Player:
             print(f"\x1b[{(k%17)+32}m[{k:02}] | {log}\x1b[0m")
 
 
-    def prep_data(self):
+    def saveData(self):
         data = {}
         for i in inspect.getmembers(self):
             if not i[0].startswith('_'):
@@ -75,15 +75,6 @@ class Player:
                     data[i[0]] = i[1]
 
         return data
-    def load_from_file(self, file):
-        with open(file, "r") as f:
-            self.data = json.load(f)
-            f.close()
-
-    def save_to_file(self):
-        with open(f"{self.name}_playerdata.json", "w") as f:
-            f.write(json.dumps(self.prep_data(), indent=4))
-            f.close()
 
     def __str__(self):
         return str(self.prep_data())
