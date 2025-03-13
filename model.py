@@ -12,6 +12,7 @@ class Model:
     """
     def __init__(self):
         self.__playerDict = {}
+        self.controller = None
 
 
     def updatePlayerData(self, p):
@@ -49,7 +50,7 @@ class Model:
         if response.status_code == 200:
             data = response.json()
             return data
-        print(f"Error: {response.status_code}")
+        return dict(error="Couldn't get data :( Code: {}".format(response.status_code))
 
     # TODO: [11-03-25] Implement a method to load playerdata for all players and create Player objects
     # TODO: [11-03-25] Implement a method to save playerdata for all the players

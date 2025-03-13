@@ -1,10 +1,14 @@
 from player import *
 from model import Model
+from controller import Controller
+from view import View
 
 p = Player("Johan", 100000)
-p2 = Player("Anubarbie", 100000)
+p2 = Player("Anubhab", 100000)
 
 m = Model()
+v = View()
+c = Controller(m, v)
 
 tmpCoin = Coin("tempCoin", 500)
 byteCoin = Coin("byteCoin", 1900)
@@ -26,3 +30,5 @@ m.updatePlayerData(p)
 m.updatePlayerData(p2)
 
 m.save_to_file()
+
+c.run()
