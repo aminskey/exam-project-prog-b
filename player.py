@@ -77,4 +77,4 @@ class Player:
         return data
 
     def __str__(self):
-        return str(self.prep_data())
+        return str(self.saveData())

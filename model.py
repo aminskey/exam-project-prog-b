@@ -11,32 +11,38 @@ class Model:
         [12/03/25] Make a function that will load playerdata.json into self.__playerDict
     """
     def __init__(self):
-        self.__playerDict = {}
+        self.playerData = {}
+        self.players = {}
         self.controller = None
 
 
     def updatePlayerData(self, p):
-        self.__playerDict[p.name] = p.saveData()
+        self.playerData[p.name] = p.saveData()
 
 
     def load_from_file(self):
         with open("playerdata.json", "r") as f:
             tmp = json.load(f)
-            f.close()
-        
-        for player in tmp.items():
-            p = Player(tmp[player].name, tmp[player].money)
-            p.history = tmp[player].history
+            f.close()        
 
-            for coin in tmp["coins"]:
-                c = Coin("", 0)
-                c.type = tmp[player][coin]["type"]
-                # TODO: Finish function...
+
+        for player, data in tmp.items():
+            p = Player(data["name"], data["money"])
+            p.history = data["history"]
+
+            for coin, cdata in data["coins"].items():
+                print(coin, cdata)
+                c = Coin(str(coin), cdata["value"])
+                c.amount = cdata["amount"]
+                p.update(c)
+            
+            self.players[p.name] = p
+                
 
 
     def save_to_file(self):
         with open("playerdata.json", "w") as f:
-            f.write(json.dumps(self.__playerDict, indent=4))
+            f.write(json.dumps(self.playerData, indent=4))
             f.close()
 
     def get_data(self, curr="dkk"):
