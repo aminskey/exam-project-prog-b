@@ -8,7 +8,7 @@ class Model:
         [12/03/25: DONE] Add self.playerDict
         [12/03/25: DONE] Make a function that will update self.playerDict
         [12/03/25: DONE] Make a function that will save self.playerDict in a file
-        [12/03/25] Make a function that will load playerdata.json into self.__playerDict
+        [12/03/25-17/03/25: DONE] Make a function that will load playerdata.json into self.__playerDict
     """
     def __init__(self):
         self.playerData = {}
