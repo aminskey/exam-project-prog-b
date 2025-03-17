@@ -5,16 +5,23 @@ from player import Player, Coin
 
 class Model:
     """
+        Tasks
         [12/03/25: DONE] Add self.playerDict
         [12/03/25: DONE] Make a function that will update self.playerDict
         [12/03/25: DONE] Make a function that will save self.playerDict in a file
         [12/03/25] Make a function that will load playerdata.json into self.__playerDict
+        Added changes:
+        [13/03/25 from working-on-views] Making __playerDict read-only (to be used in views later on...)
     """
     def __init__(self):
         self.playerData = {}
         self.players = {}
         self.controller = None
 
+
+    @property
+    def playerDict(self):
+        return self.__playerDict
 
     def updatePlayerData(self, p):
         self.playerData[p.name] = p.saveData()
