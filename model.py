@@ -18,7 +18,6 @@ class Model:
         self.players = {}
         self.controller = None
 
-
     @property
     def playerDict(self):
         return self.__playerDict

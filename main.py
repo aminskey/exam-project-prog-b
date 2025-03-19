@@ -46,4 +46,6 @@ print(m.players)
 for name, object in m.players.items():
     object.printLog()
 
+c.run()
+
 
