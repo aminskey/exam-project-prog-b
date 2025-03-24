@@ -20,7 +20,7 @@ class Model:
 
     @property
     def playerDict(self):
-        return self.__playerDict
+        return self.playerData
 
     def updatePlayerData(self, p):
         self.playerData[p.name] = p.saveData()
