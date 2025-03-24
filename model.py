@@ -57,6 +57,15 @@ class Model:
             data = response.json()
             return data
         return dict(error="Couldn't get data :( Code: {}".format(response.status_code))
+    
+    def load_coins(self, curr="dkk"):
+        data = self.get_data(curr)
+        for coin_data in data:
+            coin = Coin(
+                type=coin_data["name"],
+                value=coin_data["current_price"]
+            )
+            self.coins[coin.type] = coin
 
     # TODO: [11-03-25] Implement a method to load playerdata for all players and create Player objects
     # TODO: [11-03-25] Implement a method to save playerdata for all the players
