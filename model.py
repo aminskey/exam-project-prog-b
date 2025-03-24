@@ -5,23 +5,16 @@ from player import Player, Coin
 
 class Model:
     """
-        Tasks
         [12/03/25: DONE] Add self.playerDict
         [12/03/25: DONE] Make a function that will update self.playerDict
         [12/03/25: DONE] Make a function that will save self.playerDict in a file
-        [12/03/25] Make a function that will load playerdata.json into self.__playerDict
-        Added changes:
-        [13/03/25 from working-on-views] Making __playerDict read-only (to be used in views later on...)
+        [12/03/25-17/03/25: DONE] Make a function that will load playerdata.json into self.__playerDict
     """
     def __init__(self):
         self.playerData = {}
         self.players = {}
-        self.coins = {}
         self.controller = None
 
-    @property
-    def playerDict(self):
-        return self.playerData
 
     def updatePlayerData(self, p):
         self.playerData[p.name] = p.saveData()
@@ -64,21 +57,6 @@ class Model:
             data = response.json()
             return data
         return dict(error="Couldn't get data :( Code: {}".format(response.status_code))
-
-    def load_coins(self, curr="dkk"):
-        data = self.get_data(curr)
-        for coin_data in data:
-            coin = Coin(
-                type=coin_data["name"],
-                value=coin_data["current_price"]
-            )
-            self.coins[coin.type] = coin
-           
-
-        
-
-
-
 
     # TODO: [11-03-25] Implement a method to load playerdata for all players and create Player objects
     # TODO: [11-03-25] Implement a method to save playerdata for all the players
