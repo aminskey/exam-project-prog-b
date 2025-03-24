@@ -39,9 +39,14 @@ m = Model()
 v = View()
 c = Controller(m, v)
 
+m.controller = c
+v.controller = c
+
 m.load_from_file()
 
 print(m.players)
+
+print(m.get_data())
 
 for name, object in m.players.items():
     object.printLog()
