@@ -5,10 +5,13 @@ from player import Player, Coin
 
 class Model:
     """
+        List of tasks:
+
         [12/03/25: DONE] Add self.playerDict
         [12/03/25: DONE] Make a function that will update self.playerDict
         [12/03/25: DONE] Make a function that will save self.playerDict in a file
         [12/03/25-17/03/25: DONE] Make a function that will load playerdata.json into self.__playerDict
+        [24/03/25-25/03/25: DONE] Make a function that will load all coins into corresponding coin objects
     """
     def __init__(self):
         self.playerData = {}
