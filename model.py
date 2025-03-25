@@ -16,8 +16,11 @@ class Model:
     def __init__(self):
         self.playerData = {}
         self.players = {}
+        self.__coins = {}
         self.controller = None
 
+    def get_coins(self):
+        return self.__coins
 
     def updatePlayerData(self, p):
         self.playerData[p.name] = p.saveData()
@@ -70,7 +73,7 @@ class Model:
                 value=coin_data["current_price"],
                 meta=coin_data
             )
-            self.coins[coin.type] = coin
+            self.__coins[coin.type] = coin
 
     # TODO: [11-03-25] Implement a method to load playerdata for all players and create Player objects
     # TODO: [11-03-25] Implement a method to save playerdata for all the players

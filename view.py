@@ -46,35 +46,33 @@ class View:
 
 
 
-    def update_graph(self, event, names: list, data, w, ib: ui.InfoBox, ib_pct: ui.InfoBox):
-        item = w.get()
-        i = names.index(item)
+    def update_graph(self, names: list, cbox, *args):
+        item = cbox.get()
+        self.cIndex = names.index(item)
 
         plt.clf()
         for w in self.root.winfo_children():
             if w.winfo_name() == "graph":
                 w.destroy()
 
-        self.drawPlot(data[i], "dkk")
-        buff = self.plotToImg()
-        img = ImageTk.PhotoImage(buff)
-        lb = Label(self.root, image=img, borderwidth=7, relief="sunken", name="graph")
-        lb.grid(row=0, column=1)
 
-        self.cIndex = i
-        ib.lb1["text"] = f"{data[self.cIndex]['symbol'].upper()} Owned:"
-        ib_pct.value1["text"] = f"{data[self.cIndex]['price_change_percentage_24h']}%"
-
+        self.root.after(0, self.run, "dkk")
         self.root.mainloop()
 
 
 
 
-    def run(self, data, curr):
-        names = [i["name"] for i in data]
+    def run(self, curr):
+
+        data = self.controller.model.get_coins()
+        print(data)
+
+        names = [i for i in data]
+        currentCoin = names[self.cIndex]
+
 
         self.reset()
-        self.drawPlot(data[self.cIndex], curr)
+        self.drawPlot(data[currentCoin].meta, curr)
         buff = self.plotToImg()
         img = ImageTk.PhotoImage(buff)
 
@@ -85,8 +83,8 @@ class View:
 
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", "1000kr")
-        owned = ui.InfoBox(infoColumn, f"{data[self.cIndex]['symbol'].upper()} Owned:", "5")
-        day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[self.cIndex]['price_change_percentage_24h']}%")
+        owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", "5")
+        day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
 
         dropdown.set(names[self.cIndex])
         c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15))
@@ -94,7 +92,7 @@ class View:
         lb = Label(self.root, image=img, borderwidth=7, relief="sunken", name="graph")
         trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"))
 
-        dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_graph(event, names, data, dropdown, owned, day_pct))
+        dropdown.bind("<<ComboboxSelected>>", lambda *args: self.update_graph(names, dropdown, *args))
 
         uname.grid(row=0, column=0)
         dropdown.grid(row=1, column=0)
