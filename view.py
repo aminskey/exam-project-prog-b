@@ -71,8 +71,11 @@ class View:
         if self.miniWindow is not None:
             self.miniWindow.destroy()
         self.miniWindow = Toplevel(self.root)
-        self.miniWindow.geometry("100x100")
+        self.miniWindow.geometry("500x500")
         self.miniWindow.title("window")
+
+        self.miniWindow.resizable(0, 0)
+
         self.miniWindow.mainloop
 
 
@@ -114,6 +117,6 @@ class View:
         lb.grid(row=0, column=1)
         trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
 
-        
+        self.root.resizable(0, 0)
 
         self.root.mainloop()
