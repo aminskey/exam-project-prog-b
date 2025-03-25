@@ -1,10 +1,14 @@
 import inspect
 
 class Coin:
-    def __init__(self, type, value):
+    def __init__(self, type, value, meta=None):
         self.type = type
         self.value = value
         self.amount = 0
+
+        # We don't want to save this
+        self.meta = meta
+
 
     def saveDict(self):
         return {
@@ -13,10 +17,12 @@ class Coin:
             "amount": self.amount
         }
 
+    # Loading values from dictionary (Mainly the one in playerdata.json)
     def fromDict(self, d):
         self.type = d["type"]
         self.value = d["value"]
         self.amount = d["amount"]
+
 
     def __str__(self):
         return str(self.saveDict())

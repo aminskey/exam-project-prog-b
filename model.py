@@ -57,13 +57,15 @@ class Model:
             data = response.json()
             return data
         return dict(error="Couldn't get data :( Code: {}".format(response.status_code))
-    
+
+    # Parsing data from coingecko, and creating corresponding coin objects.
     def load_coins(self, curr="dkk"):
         data = self.get_data(curr)
         for coin_data in data:
             coin = Coin(
                 type=coin_data["name"],
-                value=coin_data["current_price"]
+                value=coin_data["current_price"],
+                meta=coin_data
             )
             self.coins[coin.type] = coin
 
