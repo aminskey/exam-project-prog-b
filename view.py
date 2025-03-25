@@ -42,13 +42,16 @@ class View:
         return Image.open(buff)
 
     def reset(self):
+
+        if self.miniWindow is not None:
+            self.miniWindow.destroy()
         for child in self.root.winfo_children():
             child.destroy()
+
 
     def update_graph(self, names: list, cbox, *args):
         item = cbox.get()
         self.cIndex = names.index(item)
-
 
         plt.clf()
         self.reset()
@@ -65,18 +68,15 @@ class View:
         self.miniWindow.title("window")
 
         self.miniWindow.resizable(0, 0)
-
-        self.miniWindow.mainloop
+        self.miniWindow.mainloop()
 
     def run(self, curr):
 
         data = self.controller.model.get_coins()
         print(data)
 
-
         names = [i for i in data]
         currentCoin = names[self.cIndex]
-
 
         self.reset()
         self.drawPlot(data[currentCoin].meta, curr)
@@ -112,7 +112,5 @@ class View:
 
         lb.grid(row=0, column=1)
         trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
-
-        self.root.resizable(0, 0)
 
         self.root.mainloop()

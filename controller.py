@@ -29,4 +29,5 @@ class Controller:
         # if no error in the code then load all data and run
         self.model.load_from_file(self.datafile)
         self.model.load_coins(data)
+
         self.view.run(curr)
