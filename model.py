@@ -26,8 +26,8 @@ class Model:
         self.playerData[p.name] = p.saveData()
 
 
-    def load_from_file(self):
-        with open("playerdata.json", "r") as f:
+    def load_from_file(self, file):
+        with open(file, "r") as f:
             tmp = json.load(f)
             f.close()        
 
@@ -65,8 +65,7 @@ class Model:
         return dict(error="Couldn't get data :( Code: {}".format(response.status_code))
 
     # Parsing data from coingecko, and creating corresponding coin objects.
-    def load_coins(self, curr="dkk"):
-        data = self.get_data(curr)
+    def load_coins(self, data):
         for coin_data in data:
             coin = Coin(
                 type=coin_data["name"],
