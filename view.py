@@ -13,6 +13,7 @@ class View:
         self.controller = None
         self.root = Tk()
         self.cIndex = 0
+        self.miniWindow = None
 
     def drawPlot(self, data, currency="dkk"):
         sparkline = data["sparkline_in_7d"]["price"]
@@ -45,7 +46,6 @@ class View:
             child.destroy()
 
 
-
     def update_graph(self, event, names: list, data, w, ib: ui.InfoBox, ib_pct: ui.InfoBox):
         item = w.get()
         i = names.index(item)
@@ -67,7 +67,13 @@ class View:
 
         self.root.mainloop()
 
-
+    def new_window(self):
+        if self.miniWindow is not None:
+            self.miniWindow.destroy()
+        self.miniWindow = Toplevel(self.root)
+        self.miniWindow.geometry("100x100")
+        self.miniWindow.title("window")
+        self.miniWindow.mainloop
 
 
     def run(self, data, curr):
@@ -89,10 +95,10 @@ class View:
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[self.cIndex]['price_change_percentage_24h']}%")
 
         dropdown.set(names[self.cIndex])
-        c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15))
+        c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15), command= self.new_window)
 
         lb = Label(self.root, image=img, borderwidth=7, relief="sunken", name="graph")
-        trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"))
+        trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"), command= self.new_window)
 
         dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_graph(event, names, data, dropdown, owned, day_pct))
 
@@ -107,5 +113,7 @@ class View:
 
         lb.grid(row=0, column=1)
         trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
+
+        
 
         self.root.mainloop()
