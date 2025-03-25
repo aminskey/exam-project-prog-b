@@ -13,6 +13,7 @@ class View:
         self.controller = None
         self.root = Tk()
         self.cIndex = 0
+        self.miniWindow = None
 
     def drawPlot(self, data, currency="dkk"):
         sparkline = data["sparkline_in_7d"]["price"]
@@ -44,11 +45,10 @@ class View:
         for child in self.root.winfo_children():
             child.destroy()
 
-
-
     def update_graph(self, names: list, cbox, *args):
         item = cbox.get()
         self.cIndex = names.index(item)
+
 
         plt.clf()
         self.reset()
@@ -57,12 +57,22 @@ class View:
         self.root.mainloop()
 
 
+    def new_window(self):
+        if self.miniWindow is not None:
+            self.miniWindow.destroy()
+        self.miniWindow = Toplevel(self.root)
+        self.miniWindow.geometry("500x500")
+        self.miniWindow.title("window")
 
+        self.miniWindow.resizable(0, 0)
+
+        self.miniWindow.mainloop
 
     def run(self, curr):
 
         data = self.controller.model.get_coins()
         print(data)
+
 
         names = [i for i in data]
         currentCoin = names[self.cIndex]
@@ -84,10 +94,10 @@ class View:
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
 
         dropdown.set(names[self.cIndex])
-        c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15))
+        c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15), command= self.new_window)
 
         lb = Label(self.root, image=img, borderwidth=7, relief="sunken", name="graph")
-        trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"))
+        trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"), command= self.new_window)
 
         dropdown.bind("<<ComboboxSelected>>", lambda *args: self.update_graph(names, dropdown, *args))
 
@@ -102,5 +112,7 @@ class View:
 
         lb.grid(row=0, column=1)
         trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
+
+        self.root.resizable(0, 0)
 
         self.root.mainloop()
