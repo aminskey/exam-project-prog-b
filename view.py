@@ -51,10 +51,7 @@ class View:
         self.cIndex = names.index(item)
 
         plt.clf()
-        for w in self.root.winfo_children():
-            if w.winfo_name() == "graph":
-                w.destroy()
-
+        self.reset()
 
         self.root.after(0, self.run, "dkk")
         self.root.mainloop()
