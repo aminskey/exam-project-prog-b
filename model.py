@@ -62,7 +62,7 @@ class Model:
     def get_data(self, curr="dkk"):
         url = "https://api.coingecko.com/api/v3/coins/markets"
         parameters = {
-            "vs_currency": curr,
+            "vs_currenkcy": curr,
             "sparkline": "true"
         }
 
@@ -74,7 +74,7 @@ class Model:
         self.get_err_codes()
         st_code = self.codes[f"{response.status_code}"]
 
-        return dict(error=f"Error {st_code['message']}", msg=f"{st_code['description']}")
+        return dict(error=f"{response.status_code}: {st_code['message']}", msg=f"{st_code['description']}")
 
     # Parsing data from coingecko, and creating corresponding coin objects.
     def load_coins(self, data):

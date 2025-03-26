@@ -79,11 +79,20 @@ class View:
 
         win.geometry("+{}+{}".format(new_x, new_y))
 
+    def winShadow(self, win, shdw):
+        w, h = win.winfo_width(), win.winfo_height()
+        x, y = win.winfo_x(), win.winfo_y()
+        shdw.geometry(f"{w}x{h}+{x+10}+{y+10}")
+        win.after(1, self.winShadow, win, shdw)
+
     def error_window(self, data):
         win = Toplevel(self.root)
         win.overrideredirect(True)
         win.attributes("-topmost", True)
         #win.geometry("300x150")
+
+        shdw = Toplevel(self.root, bg="black")
+        shdw.overrideredirect(True)
 
         content = Frame(win, relief="sunken", bd=4)
         title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
@@ -109,6 +118,7 @@ class View:
         win.bind("<B1-Motion>", lambda event: self.move_win(event, win))
         win.protocol("WM_DELETE_WINDOW", self.controller.on_closing)
 
+        win.after(0, self.winShadow, win, shdw)
         win.mainloop()
 
     def run(self, curr):
