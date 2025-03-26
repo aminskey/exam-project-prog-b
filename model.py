@@ -22,8 +22,9 @@ class Model:
     def get_coins(self):
         return self.__coins
 
-    def updatePlayerData(self, p):
-        self.playerData[p.name] = p.saveData()
+    def updatePlayerData(self):
+        for name, p in self.players.items():
+            self.playerData[name] = p.saveData()
 
 
     def load_from_file(self, file):
@@ -47,6 +48,7 @@ class Model:
 
 
     def save_to_file(self):
+        self.updatePlayerData()
         with open("playerdata.json", "w") as f:
             f.write(json.dumps(self.playerData, indent=4))
             f.close()
@@ -54,7 +56,7 @@ class Model:
     def get_data(self, curr="dkk"):
         url = "https://api.coingecko.com/api/v3/coins/markets"
         parameters = {
-            "vs_currency": curr, 
+            "vs_currensscy": curr,
             "sparkline": "true"
         }
 
@@ -62,7 +64,7 @@ class Model:
         if response.status_code == 200:
             data = response.json()
             return data
-        return dict(error="Couldn't get data :( Code: {}".format(response.status_code))
+        return dict(error="Couldn't get data :(", msg="Code: {}".format(response.status_code))
 
     # Parsing data from coingecko, and creating corresponding coin objects.
     def load_coins(self, data):
