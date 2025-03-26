@@ -18,6 +18,12 @@ class Model:
         self.players = {}
         self.__coins = {}
         self.controller = None
+        self.codes = None
+
+    def get_err_codes(self):
+        with open("codes.json", "r") as f:
+            self.codes = json.load(f)
+            f.close()
 
     def get_coins(self):
         return self.__coins
@@ -56,7 +62,7 @@ class Model:
     def get_data(self, curr="dkk"):
         url = "https://api.coingecko.com/api/v3/coins/markets"
         parameters = {
-            "vs_currensscy": curr,
+            "vs_currency": curr,
             "sparkline": "true"
         }
 
@@ -64,7 +70,11 @@ class Model:
         if response.status_code == 200:
             data = response.json()
             return data
-        return dict(error="Couldn't get data :(", msg="Code: {}".format(response.status_code))
+
+        self.get_err_codes()
+        st_code = self.codes[f"{response.status_code}"]
+
+        return dict(error=f"Error {st_code['message']}", msg=f"{st_code['description']}")
 
     # Parsing data from coingecko, and creating corresponding coin objects.
     def load_coins(self, data):

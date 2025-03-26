@@ -83,31 +83,31 @@ class View:
         win = Toplevel(self.root)
         win.overrideredirect(True)
         win.attributes("-topmost", True)
-        win.geometry("300x150")
+        #win.geometry("300x150")
 
-        content = Frame(win)
+        content = Frame(win, relief="sunken", bd=4)
         title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
 
         buff = Image.open("Warning.png").resize((50, 50))
         img = ImageTk.PhotoImage(buff)
         icon = Label(content, image=img)
-        icon.pack(side="left")
+        icon.pack(side="left", pady=10, padx=10)
 
         msg = Label(content, text=f"{data['msg']}", font=("Tahoma", 16))
-        msg.pack()
+        msg.pack(side="right")
 
+        t1 = Label(title_bar, text=data["error"], bg="blue", fg="white", font=("Tahoma", 12))
+        t1.pack(side="left")
 
         title_bar.pack(fill="x")
         content.pack(fill="both")
 
-        t1 = Label(title_bar, text="Error", bg="blue", fg="white", font=("Tahoma", 12))
-        t1.pack(side="left")
-
-        close_btn = Button(title_bar, text="X", command=win.destroy, bg="red", fg="white", bd=0)
-        close_btn.pack(side="right")
+        close_btn = Button(title_bar, text="X", command=win.destroy, bg="grey", fg="white", bd=0, font=("Consolas", 10))
+        close_btn.pack(side="right", pady=5, padx=5)
 
         win.bind("<ButtonPress-1>", lambda event: self.start_move(event, win))
         win.bind("<B1-Motion>", lambda event: self.move_win(event, win))
+        win.protocol("WM_DELETE_WINDOW", self.controller.on_closing)
 
         win.mainloop()
 
