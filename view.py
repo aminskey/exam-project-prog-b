@@ -42,7 +42,6 @@ class View:
         return Image.open(buff)
 
     def reset(self):
-
         if self.miniWindow is not None:
             self.miniWindow.destroy()
         for child in self.root.winfo_children():
@@ -67,12 +66,13 @@ class View:
         self.miniWindow.geometry("500x500")
         self.miniWindow.title("window")
 
-        self.miniWindow.resizable(0, 0)
+        self.miniWindow.resizable(False, False)
         self.miniWindow.mainloop()
 
     def run(self, curr):
 
-        data = self.controller.model.get_coins()
+        data = self.controller.all_coins
+        player = self.controller.current_player
         print(data)
 
         names = [i for i in data]
@@ -85,12 +85,15 @@ class View:
 
         leftColumn = Frame(self.root)
         infoColumn = Frame(leftColumn, bg="skyblue3")
-        uname = Label(leftColumn, text="Johan", padx=10, pady=10, font=("Calibri", 25))
+        uname = Label(leftColumn, text=player.name, padx=10, pady=10, font=("Calibri", 25))
         dropdown = ttk.Combobox(leftColumn, values=names, state="readonly")
 
 
-        blnc = ui.InfoBox(infoColumn, "Balance: ", "1000kr")
-        owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", "5")
+        blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
+
+        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+
+        owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
 
         dropdown.set(names[self.cIndex])

@@ -6,10 +6,13 @@ class Controller:
         self.model.controller = self
         self.view.controller = self
         self.datafile = "playerdata.json"
+        self.current_player = None
+        self.all_coins = None
 
         self.view.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def on_closing(self):
+        self.model.save_to_file()
         self.view.root.destroy()
         quit()
 
@@ -29,5 +32,8 @@ class Controller:
         # if no error in the code then load all data and run
         self.model.load_from_file(self.datafile)
         self.model.load_coins(data)
+        self.all_coins = self.model.get_coins()
+
+        self.current_player = self.model.players[next(iter(self.model.players))]
 
         self.view.run(curr)
