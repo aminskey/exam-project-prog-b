@@ -82,7 +82,7 @@ class View:
     def winShadow(self, win, shdw):
         w, h = win.winfo_width(), win.winfo_height()
         x, y = win.winfo_x(), win.winfo_y()
-        shdw.geometry(f"{w}x{h}+{x+10}+{y+10}")
+        shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
         win.after(1, self.winShadow, win, shdw)
 
     def error_window(self, data):
@@ -91,7 +91,7 @@ class View:
         win.attributes("-topmost", True)
         #win.geometry("300x150")
 
-        shdw = Toplevel(self.root, bg="black")
+        shdw = Toplevel(win, bg="black")
         shdw.overrideredirect(True)
 
         content = Frame(win, relief="sunken", bd=4)
@@ -111,7 +111,7 @@ class View:
         title_bar.pack(fill="x")
         content.pack(fill="both")
 
-        close_btn = Button(title_bar, text="X", command=win.destroy, bg="grey", fg="white", bd=0, font=("Consolas", 10))
+        close_btn = Button(title_bar, text="X", command=win.destroy, bg="grey", fg="white", bd=0, font=("Tahoma Mono", 10))
         close_btn.pack(side="right", pady=5, padx=5)
 
         win.bind("<ButtonPress-1>", lambda event: self.start_move(event, win))
