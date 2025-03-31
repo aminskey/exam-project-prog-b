@@ -31,13 +31,16 @@ class Player:
     def __init__(self, name, money):
         self.name = name
         self.money = money
+        self.coinData = dict()
         self.coins = dict()
         self.history = []
 
     def update(self, coin):
-        self.coins[coin.type] = coin.saveDict()
+        self.coinData[coin.type] = coin.saveDict()
+        self.coins[coin.type] = coin
         if coin.amount <= 0:
-            self.coins.pop(coin.type)
+            self.coinData.pop(coin.type)
+            self.coins.pop(coin)
             self.history.append(f"Removing {coin.type.upper()} from {self.name.upper()}'s player data given that {coin.type.upper()}.amount = 0")
 
 
@@ -49,7 +52,7 @@ class Player:
         self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} unit(s) for {coin.value}")
 
     def sell(self, new_coin: Coin, amount):
-        old_data = self.coins[new_coin.type]
+        old_data = self.coinData[new_coin.type]
         (old_coin := Coin(0, 0)).fromDict(old_data)
 
         self.money += amount * new_coin.value

@@ -175,7 +175,7 @@ class View:
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
 
-        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+        amnt_owned = player.coinData[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coinData.keys() else "0"
 
         owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
