@@ -32,6 +32,9 @@ class Model:
         for name, p in self.players.items():
             self.playerData[name] = p.saveData()
 
+    def savePlayer(self, p):
+        self.playerData[p.name] = p.saveData()
+
 
     def load_from_file(self, file):
         with open(file, "r") as f:
