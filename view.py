@@ -42,13 +42,15 @@ class View:
         return Image.open(buff)
 
     def reset(self):
+        if self.miniWindow is not None:
+            self.miniWindow.destroy()
         for child in self.root.winfo_children():
             child.destroy()
+
 
     def update_graph(self, names: list, cbox, *args):
         item = cbox.get()
         self.cIndex = names.index(item)
-
 
         plt.clf()
         self.reset()
@@ -69,7 +71,40 @@ class View:
         new_label = Label(self.miniWindow, borderwidth=7, text=title, font=("Calibri", 25))
         new_label.grid(row=0, column=0)
 
-        self.miniWindow.resizable(0, 0)
+        self.miniWindow.resizable(False, False)
+        self.miniWindow.mainloop()
+
+    def start_move(self, event, win):
+        win.x = event.x
+        win.y = event.y
+
+    def move_win(self, event, win):
+        new_x = win.winfo_x() + (event.x - win.x)
+        new_y = win.winfo_y() + (event.y - win.y)
+
+        win.geometry("+{}+{}".format(new_x, new_y))
+
+    def winShadow(self, win, shdw):
+        w, h = win.winfo_width(), win.winfo_height()
+        x, y = win.winfo_x(), win.winfo_y()
+        shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
+        win.after(1, self.winShadow, win, shdw)
+
+    def error_window(self, data):
+        win = Toplevel(self.root)
+        win.overrideredirect(True)
+        win.attributes("-topmost", True)
+        #win.geometry("300x150")
+
+        shdw = Toplevel(win, bg="black")
+        shdw.overrideredirect(True)
+        shdw.attributes("-alpha", 0.5)
+
+        content = Frame(win, relief="sunken", bd=4)
+        title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
+
+        buff = Image.open("Warning.png").resize((50, 50))
+        img = ImageTk.PhotoImage(buff)
 
     def crypto_owned_window(self):
         self.new_window("crypto coins owned", True)
@@ -93,15 +128,56 @@ class View:
 
         self.miniWindow.mainloop()
 
+
+def error_window(self, data):
+        win = Toplevel(self.root)
+        win.overrideredirect(True)
+        win.attributes("-topmost", True)
+        #win.geometry("300x150")
+
+        shdw = Toplevel(win, bg="black")
+        shdw.overrideredirect(True)
+        shdw.attributes("-alpha", 0.5)
+
+        content = Frame(win, relief="sunken", bd=4)
+        title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
+
+        buff = Image.open("Warning.png").resize((50, 50))
+        img = ImageTk.PhotoImage(buff)
+
+        crs = Image.open("cross.png")
+        exitico = ImageTk.PhotoImage(crs)
+
+        icon = Label(content, image=img)
+        icon.pack(side="left", pady=10, padx=10)
+
+        msg = Label(content, text=f"{data['msg']}", font=("Tahoma", 16))
+        msg.pack(side="right")
+
+        t1 = Label(title_bar, text=data["error"], bg="blue", fg="white", font=("Tahoma", 12))
+        t1.pack(side="left")
+
+        title_bar.pack(fill="x")
+        content.pack(fill="both")
+
+        close_btn = Button(title_bar, image=exitico, command=win.destroy, bg="#c0c0c0", bd=3, font=("Tahoma Mono", 10), relief="raised")
+        close_btn.pack(side="right", pady=5, padx=5)
+
+        win.bind("<ButtonPress-1>", lambda event: self.start_move(event, win))
+        win.bind("<B1-Motion>", lambda event: self.move_win(event, win))
+        win.protocol("WM_DELETE_WINDOW", self.controller.on_closing)
+
+        win.after(0, self.winShadow, win, shdw)
+        win.mainloop()
+    
     def run(self, curr):
 
-        data = self.controller.model.get_coins()
+        data = self.controller.all_coins
+        player = self.controller.current_player
         print(data)
-
 
         names = [i for i in data]
         currentCoin = names[self.cIndex]
-
 
         self.reset()
         self.drawPlot(data[currentCoin].meta, curr)
@@ -110,12 +186,15 @@ class View:
 
         leftColumn = Frame(self.root)
         infoColumn = Frame(leftColumn, bg="skyblue3")
-        uname = Label(leftColumn, text="Johan", padx=10, pady=10, font=("Calibri", 25))
+        uname = Label(leftColumn, text=player.name, padx=10, pady=10, font=("Calibri", 25))
         dropdown = ttk.Combobox(leftColumn, values=names, state="readonly")
 
 
-        blnc = ui.InfoBox(infoColumn, "Balance: ", "1000kr")
-        owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", "5")
+        blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
+
+        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+
+        owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
 
         dropdown.set(names[self.cIndex])
@@ -137,7 +216,5 @@ class View:
 
         lb.grid(row=0, column=1)
         trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
-
-        self.root.resizable(0, 0)
 
         self.root.mainloop()

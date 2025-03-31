@@ -27,12 +27,9 @@ p.printLog()
 print(" ")
 p2.printLog()
 
-m.updatePlayerData(p)
-m.updatePlayerData(p2)
-
+m.savePlayer(p)
+m.savePlayer(p2)
 m.save_to_file()
-
-c.run()"
 """
 
 m = Model()
@@ -40,5 +37,3 @@ v = View()
 c = Controller(m, v)
 
 c.run()
-
-

@@ -6,10 +6,13 @@ class Controller:
         self.model.controller = self
         self.view.controller = self
         self.datafile = "playerdata.json"
+        self.current_player = None
+        self.all_coins = None
 
         self.view.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def on_closing(self):
+        self.model.save_to_file()
         self.view.root.destroy()
         quit()
 
@@ -24,9 +27,14 @@ class Controller:
         if "error" in data:
             # Print error message with appropriate colors (RED and BOLD).
             print("\x1b[31m\x1b[1mError: {}\x1b[0m\x1b[22m".format(data["error"]))
-            return -1
+            self.view.error_window(data)
+            #return -1
 
         # if no error in the code then load all data and run
         self.model.load_from_file(self.datafile)
         self.model.load_coins(data)
+        self.all_coins = self.model.get_coins()
+
+        self.current_player = self.model.players[next(iter(self.model.players))]
+
         self.view.run(curr)
