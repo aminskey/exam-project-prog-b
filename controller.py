@@ -25,8 +25,8 @@ class Controller:
         data = self.model.get_data()
 
         if "error" in data:
-            # Print error message with appropriate colors (RED and BOLD).
-            print("\x1b[31m\x1b[1mError: {}\x1b[0m\x1b[22m".format(data["error"]))
+            # Print error message with appropriate formatting (RED and BOLD).
+            print("\x1b[31m\x1b[1mError: {}".format(data["error"]), end="\x1b[0m\x1b[22m\n")
             self.view.error_window(data)
             #return -1
 

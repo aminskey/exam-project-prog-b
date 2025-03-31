@@ -152,8 +152,26 @@ class View:
 
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
-    
-    def run(self, curr):
+
+    def login(self):
+        self.reset()
+        self.root.geometry("400x400")
+
+        names = [name for name in self.controller.model.players]
+
+        title = Label(self.root, text="Welcome!", font=("Calibri", 35))
+        sub = Label(self.root, text="Select a player", font=("Consolas", 14))
+        cbox = ttk.Combobox(self.root, values=names, state="readonly")
+
+        title.place(relx=0.5, rely=0.3, anchor="s")
+        sub.place(relx=0.5, rely=0.45, anchor="s")
+        cbox.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.root.mainloop()
+
+    def run(self, *args, **kwargs):
+        self.login()
+    def main(self, curr):
 
         data = self.controller.all_coins
         player = self.controller.current_player
@@ -175,7 +193,7 @@ class View:
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
 
-        amnt_owned = player.coinData[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coinData.keys() else "0"
+        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
 
         owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
