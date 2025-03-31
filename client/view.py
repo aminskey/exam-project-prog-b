@@ -42,6 +42,7 @@ class View:
         return Image.open(buff)
 
     def reset(self):
+        self.root.geometry("")
         if self.miniWindow is not None:
             self.miniWindow.destroy()
         for child in self.root.winfo_children():
@@ -55,7 +56,7 @@ class View:
         plt.clf()
         self.reset()
 
-        self.root.after(0, self.run, "dkk")
+        self.root.after(0, self.main, "dkk")
         self.root.mainloop()
 
 #lav new_window om til to funktioner, en for hver knap
@@ -162,19 +163,20 @@ class View:
         title = Label(self.root, text="Welcome!", font=("Calibri", 35))
         sub = Label(self.root, text="Select a player", font=("Consolas", 14))
         cbox = ttk.Combobox(self.root, values=names, state="readonly")
+        btn = Button(self.root, text="Login", font=("Calibri"), command=lambda: self.main(self.controller.current_player, "dkk"))
 
         title.place(relx=0.5, rely=0.3, anchor="s")
         sub.place(relx=0.5, rely=0.45, anchor="s")
         cbox.place(relx=0.5, rely=0.5, anchor="center")
+        btn.place(relx=0.5, rely=0.55, anchor="n")
 
         self.root.mainloop()
 
     def run(self, *args, **kwargs):
         self.login()
-    def main(self, curr):
+    def main(self, player, curr):
 
         data = self.controller.all_coins
-        player = self.controller.current_player
         print(data)
 
         names = [i for i in data]

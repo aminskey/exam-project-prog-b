@@ -21,7 +21,7 @@ class Model:
         self.codes = None
 
     def get_err_codes(self):
-        with open("codes.json", "r") as f:
+        with open("../codes.json", "r") as f:
             self.codes = json.load(f)
             f.close()
 
@@ -58,7 +58,7 @@ class Model:
 
     def save_to_file(self):
         self.updatePlayerData()
-        with open("playerdata.json", "w") as f:
+        with open("../playerdata.json", "w") as f:
             f.write(json.dumps(self.playerData, indent=4))
             f.close()
 
