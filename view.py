@@ -129,7 +129,7 @@ class View:
         self.miniWindow.mainloop()
 
 
-def error_window(self, data):
+    def error_window(self, data):
         win = Toplevel(self.root)
         win.overrideredirect(True)
         win.attributes("-topmost", True)
