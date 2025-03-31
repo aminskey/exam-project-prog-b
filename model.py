@@ -62,7 +62,7 @@ class Model:
     def get_data(self, curr="dkk"):
         url = "https://api.coingecko.com/api/v3/coins/markets"
         parameters = {
-            "vs_currenkcy": curr,
+            "vs_currency": curr,
             "sparkline": "true"
         }
 

@@ -93,12 +93,17 @@ class View:
 
         shdw = Toplevel(win, bg="black")
         shdw.overrideredirect(True)
+        shdw.attributes("-alpha", 0.5)
 
         content = Frame(win, relief="sunken", bd=4)
         title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
 
         buff = Image.open("Warning.png").resize((50, 50))
         img = ImageTk.PhotoImage(buff)
+
+        crs = Image.open("cross.png")
+        exitico = ImageTk.PhotoImage(crs)
+
         icon = Label(content, image=img)
         icon.pack(side="left", pady=10, padx=10)
 
@@ -111,7 +116,7 @@ class View:
         title_bar.pack(fill="x")
         content.pack(fill="both")
 
-        close_btn = Button(title_bar, text="X", command=win.destroy, bg="grey", fg="white", bd=0, font=("Tahoma Mono", 10))
+        close_btn = Button(title_bar, image=exitico, command=win.destroy, bg="#c0c0c0", bd=3, font=("Tahoma Mono", 10), relief="raised")
         close_btn.pack(side="right", pady=5, padx=5)
 
         win.bind("<ButtonPress-1>", lambda event: self.start_move(event, win))
