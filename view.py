@@ -90,29 +90,12 @@ class View:
         shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
         win.after(1, self.winShadow, win, shdw)
 
-    def error_window(self, data):
-        win = Toplevel(self.root)
-        win.overrideredirect(True)
-        win.attributes("-topmost", True)
-        #win.geometry("300x150")
-
-        shdw = Toplevel(win, bg="black")
-        shdw.overrideredirect(True)
-        shdw.attributes("-alpha", 0.5)
-
-        content = Frame(win, relief="sunken", bd=4)
-        title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
-
-        buff = Image.open("Warning.png").resize((50, 50))
-        img = ImageTk.PhotoImage(buff)
-
     def crypto_owned_window(self):
         self.new_window("crypto coins owned", True)
         crypto_text=Label(self.miniWindow, text="BTC: 100")
         crypto_text.grid(row=1, column=0, sticky="nw")
        
         self.miniWindow.mainloop()
-
 
     def buy_sell_window(self):
         self.new_window("buy/sell", True)
