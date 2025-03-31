@@ -58,13 +58,18 @@ class View:
         self.root.after(0, self.run, "dkk")
         self.root.mainloop()
 
+#lav new_window om til to funktioner, en for hver knap
 
-    def new_window(self):
+    def new_window(self, title="window", geoSet=False):
         if self.miniWindow is not None:
-            self.miniWindow.destroy()
+            self.miniWindow.destroy() 
         self.miniWindow = Toplevel(self.root)
-        self.miniWindow.geometry("500x500")
-        self.miniWindow.title("window")
+        if geoSet:
+            self.miniWindow.geometry("500x500")
+        self.miniWindow.title(title)
+
+        new_label = Label(self.miniWindow, borderwidth=7, text=title, font=("Calibri", 25))
+        new_label.grid(row=0, column=0)
 
         self.miniWindow.resizable(False, False)
         self.miniWindow.mainloop()
@@ -86,6 +91,45 @@ class View:
         win.after(1, self.winShadow, win, shdw)
 
     def error_window(self, data):
+        win = Toplevel(self.root)
+        win.overrideredirect(True)
+        win.attributes("-topmost", True)
+        #win.geometry("300x150")
+
+        shdw = Toplevel(win, bg="black")
+        shdw.overrideredirect(True)
+        shdw.attributes("-alpha", 0.5)
+
+        content = Frame(win, relief="sunken", bd=4)
+        title_bar = Frame(win, bg="blue", relief="raised", bd=5, height=30)
+
+        buff = Image.open("Warning.png").resize((50, 50))
+        img = ImageTk.PhotoImage(buff)
+
+    def crypto_owned_window(self):
+        self.new_window("crypto coins owned", True)
+        crypto_text=Label(self.miniWindow, text="BTC: 100")
+        crypto_text.grid(row=1, column=0, sticky="nw")
+       
+        self.miniWindow.mainloop()
+
+
+    def buy_sell_window(self):
+        self.new_window("buy/sell", True)
+
+        amount_input = Entry(self.miniWindow)
+        amount_input.grid(row=1, column=0)
+
+        buy_button = Button(self.miniWindow, text="Buy")
+        buy_button.grid(row=2, column=0, sticky="nw")
+
+        sell_button = Button(self.miniWindow, text="Sell")
+        sell_button.grid(row=2, column=0, sticky="ne")
+
+        self.miniWindow.mainloop()
+
+
+def error_window(self, data):
         win = Toplevel(self.root)
         win.overrideredirect(True)
         win.attributes("-topmost", True)
@@ -125,7 +169,7 @@ class View:
 
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
-
+    
     def run(self, curr):
 
         data = self.controller.all_coins
@@ -154,10 +198,10 @@ class View:
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
 
         dropdown.set(names[self.cIndex])
-        c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15), command= self.new_window)
+        c_owned = Button(self.root, text="View owned crypto-stocks", padx=5, pady=2, font=("Calibri", 15), command= self.crypto_owned_window)
 
         lb = Label(self.root, image=img, borderwidth=7, relief="sunken", name="graph")
-        trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"), command= self.new_window)
+        trade = Button(self.root, text="Buy/Sell", padx=5, pady=2, font=("Calibri", 20, "bold"), command= self.buy_sell_window)
 
         dropdown.bind("<<ComboboxSelected>>", lambda *args: self.update_graph(names, dropdown, *args))
 
