@@ -1,12 +1,31 @@
 {
     "Johan": {
-        "coins": {},
+        "coins": {
+            "byteCoin": {
+                "type": "byteCoin",
+                "value": 1400,
+                "amount": 1
+            },
+            "minminCoin": {
+                "type": "minminCoin",
+                "value": 2400,
+                "amount": 5
+            }
+        },
         "history": [
             "JOHAN invested in TEMPCOIN. Bought 7 unit(s) for 500",
             "JOHAN sold 7 unit(s) of TEMPCOIN for 629. I.e a profit of 903",
-            "Removing TEMPCOIN from JOHAN's player data given that TEMPCOIN.amount = 0"
+            "Removing TEMPCOIN from JOHAN's player data given that TEMPCOIN.amount = 0",
+            "JOHAN invested in ETHEREUM. Bought 1 unit(s) for 13052.51",
+            "JOHAN invested in ETHEREUM. Bought 1 unit(s) for 13221.21",
+            "JOHAN sold 1 unit(s) of ETHEREUM for 13221.21. I.e a profit of 0.0",
+            "Removing ETHEREUM from JOHAN's player data given that ETHEREUM.amount = 0",
+            "JOHAN invested in ETHEREUM. Bought 1 unit(s) for 13208.76",
+            "JOHAN invested in ETHEREUM. Bought 1 unit(s) for 13208.76",
+            "JOHAN sold 1 unit(s) of ETHEREUM for 13208.76. I.e a profit of 0.0",
+            "Removing ETHEREUM from JOHAN's player data given that ETHEREUM.amount = 0"
         ],
-        "money": 100903,
+        "money": 74641.73,
         "name": "Johan"
     },
     "Anubhab": {

@@ -4,6 +4,8 @@ from tkinter import ttk
 from io import BytesIO
 from PIL import Image, ImageTk
 
+from player import Coin
+
 import matplotlib.pyplot as plt
 import numpy as np
 import UI_widgets as ui
@@ -90,11 +92,65 @@ class View:
         shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
         win.after(1, self.winShadow, win, shdw)
 
+    """def validate_numbers(self, new_entry):
+        input_data = new_entry.get()
+        if input_data:
+            print("not empty")
+        else:
+            print("empty")"""
+    
+    def process_transaction(self, amount_input, action):
+        input_data = amount_input.get().strip()
+
+        if not input_data:
+            print("Empty")
+            return
+        
+        try:
+            amount = int(input_data)
+            if amount <= 0:
+                print("Must be greater than zero")
+                return
+            
+            coin_name = list(self.controller.all_coins.keys())[self.cIndex]
+            coin_data = self.controller.all_coins[coin_name].meta
+            coin_price = coin_data["current_price"]
+            player = self.controller.current_player
+
+            if action == "buy":
+                total_cost = amount * coin_price
+
+                if player.money >= total_cost:
+                    player.invest(Coin(coin_name, coin_price), amount)
+                    print("succes buy")
+                else:
+                    print("not enough money")
+
+            elif action == "sell":
+                if coin_name in player.coins and player.coins[coin_name]["amount"] >= amount:
+                    player.sell(Coin(coin_name, coin_price), amount)
+                    print("succes sell")
+                else:
+                    print("not enough coin")
+
+
+
+        except ValueError:
+            print("Invalid input")    
+        
+    
+
     def crypto_owned_window(self):
         self.new_window("crypto coins owned", True)
-        crypto_text=Label(self.miniWindow, text="BTC: 100")
-        crypto_text.grid(row=1, column=0, sticky="nw")
-       
+
+        player_coins = self.controller.current_player.coins
+
+        i=1
+        for coin in player_coins.values():
+            coin_label = Label(self.miniWindow, text=f"{coin['type']}: {coin['amount']}")
+            coin_label.grid(row=i, column=0, sticky="nw", pady= 10)
+            i +=1
+           
         self.miniWindow.mainloop()
 
 
@@ -104,14 +160,17 @@ class View:
         amount_input = Entry(self.miniWindow)
         amount_input.grid(row=1, column=0)
 
-        buy_button = Button(self.miniWindow, text="Buy")
+
+        buy_button = Button(self.miniWindow, text="Buy", command=lambda: self.process_transaction(amount_input, "buy"))
         buy_button.grid(row=2, column=0, sticky="nw")
 
-        sell_button = Button(self.miniWindow, text="Sell")
+        sell_button = Button(self.miniWindow, text="Sell", command=lambda: self.process_transaction(amount_input, "sell"))
         sell_button.grid(row=2, column=0, sticky="ne")
 
         self.miniWindow.mainloop()
 
+
+    
 
     def error_window(self, data):
         win = Toplevel(self.root)
@@ -176,7 +235,8 @@ class View:
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
 
-        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+        #amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+        amnt_owned = player.coins[data[currentCoin].meta['name']]["amount"] if data[currentCoin].meta['name'] in player.coins else "0"
 
         owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
