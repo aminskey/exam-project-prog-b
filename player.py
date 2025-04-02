@@ -42,8 +42,18 @@ class Player:
 
 
     def invest(self, coin: Coin, amount):
-        coin.amount = amount
-        self.update(coin)
+        if coin.type in self.coins:
+            
+            d = self.coins[coin.type]
+            oldCoin = Coin(0,0)
+            oldCoin.fromDict(d)
+
+            coin.amount += amount + oldCoin.amount
+            self.update(coin)
+        else:
+            coin.amount += amount
+            self.update(coin)
+
         self.money -= amount * coin.value
 
         self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} unit(s) for {coin.value}")

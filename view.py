@@ -43,8 +43,8 @@ class View:
         buff.seek(0)
         return Image.open(buff)
 
-    def reset(self):
-        if self.miniWindow is not None:
+    def reset(self, killWindow=True):
+        if self.miniWindow is not None and killWindow:
             self.miniWindow.destroy()
         for child in self.root.winfo_children():
             child.destroy()
@@ -101,6 +101,8 @@ class View:
     
     def process_transaction(self, amount_input, action):
         input_data = amount_input.get().strip()
+        
+
 
         if not input_data:
             print("Empty")
@@ -138,12 +140,23 @@ class View:
         except ValueError:
             print("Invalid input")    
         
+
+        plt.clf()
+        self.reset(killWindow=False)
+
+        self.root.after(0, self.run, "dkk")
+        self.root.mainloop()
+        
     
 
     def crypto_owned_window(self):
         self.new_window("crypto coins owned", True)
+        
 
         player_coins = self.controller.current_player.coins
+
+      
+        
 
         i=1
         for coin in player_coins.values():
