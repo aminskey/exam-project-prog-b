@@ -23,7 +23,10 @@
             "JOHAN invested in ETHEREUM. Bought 1 unit(s) for 13208.76",
             "JOHAN invested in ETHEREUM. Bought 1 unit(s) for 13208.76",
             "JOHAN sold 1 unit(s) of ETHEREUM for 13208.76. I.e a profit of 0.0",
-            "Removing ETHEREUM from JOHAN's player data given that ETHEREUM.amount = 0"
+            "Removing ETHEREUM from JOHAN's player data given that ETHEREUM.amount = 0",
+            "JOHAN invested in DOGECOIN. Bought 3 unit(s) for 1.18",
+            "JOHAN sold 3 unit(s) of DOGECOIN for 1.18. I.e a profit of 0.0",
+            "Removing DOGECOIN from JOHAN's player data given that DOGECOIN.amount = 0"
         ],
         "money": 74641.73,
         "name": "Johan"
