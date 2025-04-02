@@ -42,7 +42,9 @@ class Player:
 
 
     def invest(self, coin: Coin, amount):
-        coin.amount = amount
+        (oldcoin := Coin(0, 0)).fromDict(self.coins[coin.type])
+        coin.amount = amount + oldcoin.amount
+
         self.update(coin)
         self.money -= amount * coin.value
 

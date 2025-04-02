@@ -153,14 +153,21 @@ class View:
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
 
-    def choosePlayer(self, cbx):
-        item = cbx.get()
+    def choosePlayer(self, inp):
+        item = None
+        if isinstance(inp, ttk.Combobox):
+            item = inp.get()
+        elif isinstance(inp, str):
+            item = inp
         for i in self.controller.model.players:
             if i == item:
                 self.controller.current_player = self.controller.model.players[item]
                 break
 
         self.root.geometry("")
+
+        plt.clf()
+        self.reset()
         self.main("dkk")
 
 
@@ -190,6 +197,7 @@ class View:
         player = self.controller.current_player
         print(data)
 
+
         names = [i for i in data]
         currentCoin = names[self.cIndex]
 
@@ -197,6 +205,18 @@ class View:
         self.drawPlot(data[currentCoin].meta, curr)
         buff = self.plotToImg()
         img = ImageTk.PhotoImage(buff)
+
+        menu = Frame(self.root, bd=3)
+        op1 = Menubutton(menu, text="Switch Users", relief="groove")
+        op1.pack()
+
+        op1.menu = Menu(op1, tearoff=0)
+        op1["menu"] = op1.menu
+
+        for i in self.controller.model.players:
+            if i != player.name:
+                k = i
+                op1.menu.add_command(label=i, command=lambda: self.choosePlayer(k))
 
         leftColumn = Frame(self.root)
         infoColumn = Frame(leftColumn, bg="skyblue3")
@@ -219,16 +239,17 @@ class View:
 
         dropdown.bind("<<ComboboxSelected>>", lambda *args: self.update_graph(names, dropdown, *args))
 
-        uname.grid(row=0, column=0)
-        dropdown.grid(row=1, column=0)
-        blnc.grid(row=0, column=0, pady=(5, 0), sticky="nw")
-        owned.grid(row=1, column=0, sticky="nw")
-        day_pct.grid(row=2, column=0, pady=(0, 5), sticky="nw")
-        infoColumn.grid(row=2, column=0, pady=(10, 0))
-        leftColumn.grid(row=0, column=0, sticky="nw", padx=20)
-        c_owned.grid(row=1, column=0, sticky="ne", padx=5, pady=(10, 5))
+        menu.grid(row=0, column=0, sticky="nw")
+        uname.grid(row=1, column=0)
+        dropdown.grid(row=2, column=0)
+        blnc.grid(row=1, column=0, pady=(5, 0), sticky="nw")
+        owned.grid(row=2, column=0, sticky="nw")
+        day_pct.grid(row=3, column=0, pady=(0, 5), sticky="nw")
+        infoColumn.grid(row=3, column=0, pady=(10, 0))
+        leftColumn.grid(row=1, column=0, sticky="nw", padx=20)
+        c_owned.grid(row=2, column=0, sticky="ne", padx=5, pady=(10, 5))
 
-        lb.grid(row=0, column=1)
-        trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
+        lb.grid(row=1, column=1)
+        trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
         self.root.mainloop()
