@@ -55,7 +55,7 @@ class View:
         plt.clf()
         self.reset()
 
-        self.root.after(0, self.run, "dkk")
+        self.root.after(0, self.main, "dkk")
         self.root.mainloop()
 
 #lav new_window om til to funktioner, en for hver knap
@@ -153,6 +153,17 @@ class View:
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
 
+    def choosePlayer(self, cbx):
+        item = cbx.get()
+        for i in self.controller.model.players:
+            if i == item:
+                self.controller.current_player = self.controller.model.players[item]
+                break
+
+        self.root.geometry("")
+        self.main("dkk")
+
+
     def login(self):
         self.reset()
         self.root.geometry("400x400")
@@ -162,10 +173,12 @@ class View:
         title = Label(self.root, text="Welcome!", font=("Calibri", 35))
         sub = Label(self.root, text="Select a player", font=("Consolas", 14))
         cbox = ttk.Combobox(self.root, values=names, state="readonly")
+        btn = Button(self.root, text="Login", font=("Calibri", 15), command=lambda: self.choosePlayer(cbox), pady=2, padx=3)
 
         title.place(relx=0.5, rely=0.3, anchor="s")
         sub.place(relx=0.5, rely=0.45, anchor="s")
         cbox.place(relx=0.5, rely=0.5, anchor="center")
+        btn.place(relx=0.5, rely=0.6, anchor="n")
 
         self.root.mainloop()
 
