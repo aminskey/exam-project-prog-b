@@ -32,5 +32,14 @@
             "ANUBHAB sold 1 unit(s) of BYTECOIN for 1400. I.e a profit of -500"
         ],
         "coins": {}
+    },
+    "Mohamed": {
+        "name": "Mohamed",
+        "money": 10.000000000000002,
+        "history": [],
+        "coins": {
+            "The Graph": [],
+            "Movement": []
+        }
     }
 }

@@ -57,7 +57,7 @@ class View:
         plt.clf()
         self.reset()
 
-        self.root.after(0, self.run, "dkk")
+        self.root.after(0, self.main, "dkk")
         self.root.mainloop()
 
 #lav new_window om til to funktioner, en for hver knap
@@ -134,7 +134,7 @@ class View:
         plt.clf()
         self.reset(killWindow=False)
 
-        self.root.after(0, self.run, "dkk")
+        self.root.after(0, self.main, "dkk")
         self.root.mainloop()
         
     def crypto_owned_window(self):
@@ -195,8 +195,6 @@ class View:
         self.miniWindow.mainloop()
 
 
-    
-
     def error_window(self, data):
         win = Toplevel(self.root)
         win.overrideredirect(True)
@@ -237,12 +235,51 @@ class View:
 
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
-    
-    def run(self, curr):
+
+    def choosePlayer(self, inp):
+        item = None
+        if isinstance(inp, ttk.Combobox):
+            item = inp.get()
+        elif isinstance(inp, str):
+            item = inp
+        for i in self.controller.model.players:
+            if i == item:
+                self.controller.current_player = self.controller.model.players[item]
+                break
+
+        self.root.geometry("")
+
+        plt.clf()
+        self.reset()
+        self.main("dkk")
+
+
+    def login(self):
+        self.reset()
+        self.root.geometry("400x400")
+
+        names = [name for name in self.controller.model.players]
+
+        title = Label(self.root, text="Welcome!", font=("Calibri", 35))
+        sub = Label(self.root, text="Select a player", font=("Consolas", 14))
+        cbox = ttk.Combobox(self.root, values=names, state="readonly")
+        btn = Button(self.root, text="Login", font=("Calibri", 15), command=lambda: self.choosePlayer(cbox), pady=2, padx=3)
+
+        title.place(relx=0.5, rely=0.3, anchor="s")
+        sub.place(relx=0.5, rely=0.45, anchor="s")
+        cbox.place(relx=0.5, rely=0.5, anchor="center")
+        btn.place(relx=0.5, rely=0.6, anchor="n")
+
+        self.root.mainloop()
+
+    def run(self, *args, **kwargs):
+        self.login()
+    def main(self, curr):
 
         data = self.controller.all_coins
         player = self.controller.current_player
         print(data)
+
 
         names = [i for i in data]
         currentCoin = names[self.cIndex]
@@ -252,6 +289,18 @@ class View:
         buff = self.plotToImg()
         img = ImageTk.PhotoImage(buff)
 
+        menu = Frame(self.root, bd=3)
+        op1 = Menubutton(menu, text="Switch Users", relief="groove")
+        op1.pack()
+
+        op1.menu = Menu(op1, tearoff=0)
+        op1["menu"] = op1.menu
+
+        for i in self.controller.model.players:
+            if i != player.name:
+                k = i
+                op1.menu.add_command(label=i, command=lambda: self.choosePlayer(k))
+
         leftColumn = Frame(self.root)
         infoColumn = Frame(leftColumn, bg="skyblue3")
         uname = Label(leftColumn, text=player.name, padx=10, pady=10, font=("Calibri", 25))
@@ -260,7 +309,6 @@ class View:
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
 
-        #amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
         amnt_owned = player.getAmountOfCoin(data[currentCoin].meta['name'])
 
         owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
@@ -274,16 +322,17 @@ class View:
 
         dropdown.bind("<<ComboboxSelected>>", lambda *args: self.update_graph(names, dropdown, *args))
 
-        uname.grid(row=0, column=0)
-        dropdown.grid(row=1, column=0)
-        blnc.grid(row=0, column=0, pady=(5, 0), sticky="nw")
-        owned.grid(row=1, column=0, sticky="nw")
-        day_pct.grid(row=2, column=0, pady=(0, 5), sticky="nw")
-        infoColumn.grid(row=2, column=0, pady=(10, 0))
-        leftColumn.grid(row=0, column=0, sticky="nw", padx=20)
-        c_owned.grid(row=1, column=0, sticky="ne", padx=5, pady=(10, 5))
+        menu.grid(row=0, column=0, sticky="nw")
+        uname.grid(row=1, column=0)
+        dropdown.grid(row=2, column=0)
+        blnc.grid(row=1, column=0, pady=(5, 0), sticky="nw")
+        owned.grid(row=2, column=0, sticky="nw")
+        day_pct.grid(row=3, column=0, pady=(0, 5), sticky="nw")
+        infoColumn.grid(row=3, column=0, pady=(10, 0))
+        leftColumn.grid(row=1, column=0, sticky="nw", padx=20)
+        c_owned.grid(row=2, column=0, sticky="ne", padx=5, pady=(10, 5))
 
-        lb.grid(row=0, column=1)
-        trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
+        lb.grid(row=1, column=1)
+        trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
         self.root.mainloop()
