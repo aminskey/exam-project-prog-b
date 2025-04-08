@@ -1,6 +1,6 @@
 import inspect
 
-from queue import Queue
+from datastructures import Queue
 
 class Coin:
     def __init__(self, type, value, meta=None):

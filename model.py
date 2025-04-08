@@ -2,6 +2,7 @@ import json
 import requests
 
 from player import Player, Coin
+from datastructures import Queue
 
 class Model:
     """
@@ -46,11 +47,15 @@ class Model:
             p = Player(data["name"], data["money"])
             p.history = data["history"]
 
-            for coin, cdata in data["coins"].items():
-                print(coin, cdata)
-                c = Coin(str(coin), cdata["value"])
-                c.amount = cdata["amount"]
-                p.update(c)
+
+            for key, cdata in data["coins"].items():
+                q = Queue()
+                for coin in cdata:
+                    c = Coin(coin["name"], coin["value"])
+                    c.amount = coin["amount"]
+                    q.push(c)
+                p.coins[key] = q
+
 
                 # TODO: Make a queue with updated coin information
             
