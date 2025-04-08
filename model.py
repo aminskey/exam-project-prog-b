@@ -51,7 +51,7 @@ class Model:
             for key, cdata in data["coins"].items():
                 q = Queue()
                 for coin in cdata:
-                    c = Coin(coin["name"], coin["value"])
+                    c = Coin(coin["type"], coin["value"])
                     c.amount = coin["amount"]
                     q.push(c)
                 p.coins[key] = q

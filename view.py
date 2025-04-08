@@ -4,6 +4,8 @@ from tkinter import ttk
 from io import BytesIO
 from PIL import Image, ImageTk
 
+from player import Coin
+
 import matplotlib.pyplot as plt
 import numpy as np
 import UI_widgets as ui
@@ -41,8 +43,8 @@ class View:
         buff.seek(0)
         return Image.open(buff)
 
-    def reset(self):
-        if self.miniWindow is not None:
+    def reset(self, killWindow=True):
+        if self.miniWindow is not None and killWindow:
             self.miniWindow.destroy()
         for child in self.root.winfo_children():
             child.destroy()
@@ -72,7 +74,7 @@ class View:
         new_label.grid(row=0, column=0)
 
         self.miniWindow.resizable(False, False)
-        self.miniWindow.mainloop()
+        
 
     def start_move(self, event, win):
         win.x = event.x
@@ -90,12 +92,92 @@ class View:
         shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
         win.after(1, self.winShadow, win, shdw)
 
+    
+    def process_transaction(self, amount_input, action):
+        input_data = amount_input.get().strip()
+
+        if not input_data:
+            print("Empty")
+            return
+        
+        try:
+            amount = int(input_data)
+            if amount <= 0:
+                print("Must be greater than zero")
+                return
+            
+            coin_name = list(self.controller.all_coins.keys())[self.cIndex]
+            coin_data = self.controller.all_coins[coin_name].meta
+            coin_price = coin_data["current_price"]
+            player = self.controller.current_player
+
+            if action == "buy":
+                total_cost = amount * coin_price
+
+                if player.money >= total_cost:
+                    player.invest(Coin(coin_name, coin_price), amount)
+                    print(f"succes buy {amount}")
+                else:
+                    print("not enough money")
+
+            elif action == "sell":
+                if player.getAmountOfCoin(coin_name) >= amount:
+                    player.sell(Coin(coin_name, coin_price), amount)
+                    print(f"succes sell {amount}")
+                else:
+                    print("not enough coin")
+
+        except ValueError:
+            print("Invalid input")    
+        
+
+        plt.clf()
+        self.reset(killWindow=False)
+
+        self.root.after(0, self.main, "dkk")
+        self.root.mainloop()
+        
     def crypto_owned_window(self):
-        self.new_window("crypto coins owned", True)
-        crypto_text=Label(self.miniWindow, text="BTC: 100")
-        crypto_text.grid(row=1, column=0, sticky="nw")
-       
+        self.new_window("Crypto Coins Owned", True)
+        player_coins = self.controller.current_player.coins
+
+        container = Frame(self.miniWindow)
+        container.grid(row=1, column=0, sticky="nsew")
+
+        canvas = Canvas(container, highlightthickness=0)
+        canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = Scrollbar(container, orient=VERTICAL, command=canvas.yview)
+        scrollbar.grid(row=0, column=1, sticky="ns")  
+
+        scrollable_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+        
+        def on_frame_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        scrollable_frame.bind("<Configure>", on_frame_configure)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        
+        def _on_mouse_wheel(event):
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+        self.miniWindow.bind("<MouseWheel>", _on_mouse_wheel)  
+        
+        for i, coins in enumerate(player_coins.values(), start=1):
+            for k, coin in enumerate(coins.arr, start=1):
+                coin_label = Label(scrollable_frame, text=f"{coin.type}: {coin.amount}", font=("Calibri", 14))
+                coin_label.grid(row=k+i, column=0, sticky="w", padx=10, pady=5)
+
+        
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
         self.miniWindow.mainloop()
+
+
 
     def buy_sell_window(self):
         self.new_window("buy/sell", True)
@@ -103,10 +185,11 @@ class View:
         amount_input = Entry(self.miniWindow)
         amount_input.grid(row=1, column=0)
 
-        buy_button = Button(self.miniWindow, text="Buy")
+
+        buy_button = Button(self.miniWindow, text="Buy", command=lambda: self.process_transaction(amount_input, "buy"))
         buy_button.grid(row=2, column=0, sticky="nw")
 
-        sell_button = Button(self.miniWindow, text="Sell")
+        sell_button = Button(self.miniWindow, text="Sell", command=lambda: self.process_transaction(amount_input, "sell"))
         sell_button.grid(row=2, column=0, sticky="ne")
 
         self.miniWindow.mainloop()
@@ -226,7 +309,7 @@ class View:
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
 
-        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+        amnt_owned = player.getAmountOfCoin(data[currentCoin].meta['name'])
 
         owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")

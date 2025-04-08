@@ -1,5 +1,3 @@
-import inspect
-
 from datastructures import Queue
 
 class Coin:
@@ -37,6 +35,18 @@ class Player:
         self.history = []
 
 
+    def getAmountOfCoin(self, type):
+        if type not in self.coins:
+            return 0
+
+        q = self.coins[type]
+        amounts = q.seekAllByAttr("amount")
+        k = 0
+        for i in amounts:
+            k += i.amount
+
+        return k
+
     def invest(self, coin: Coin, amount):
         if coin.type not in self.coins:
             self.coins[coin.type] = Queue()
@@ -45,21 +55,13 @@ class Player:
         self.money -= amount * coin.value
         ret = q.seekByAttrVal("value", coin.value)
         if not ret:
+            print("no return...")
             coin.amount = amount
             q.push(coin)
         else:
+            print("return true")
             i, _ = ret
             q.arr[i].amount += coin.amount
-
-        """
-        (oldcoin := Coin(0, 0)).fromDict(self.coins[coin.type])
-        coin.amount = amount + oldcoin.amount
-
-        self.update(coin)
-        self.money -= amount * coin.value
-
-        self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} unit(s) for {coin.value}")
-        """
 
     def sell(self, coin: Coin, amount):
 
@@ -67,7 +69,7 @@ class Player:
             print("Coin type not in self.coins")
             return
 
-        firstCoin = self.coins[coin.type][0]
+        firstCoin = self.coins[coin.type].arr[0]
         newAmount = firstCoin.amount - amount
 
         if newAmount <= 0:
@@ -101,12 +103,12 @@ class Player:
         for k, log in enumerate(self.history):
             print(f"\x1b[{(k%17)+32}m[{k:02}] | {log}\x1b[0m")
 
-
     def genJSON(self):
         data = {
             "name": self.name,
             "money": self.money,
-            "history": self.history
+            "history": self.history,
+            "coins": dict()
         }
 
         for coin in self.coins:
