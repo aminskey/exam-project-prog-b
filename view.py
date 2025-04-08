@@ -4,6 +4,8 @@ from tkinter import ttk
 from io import BytesIO
 from PIL import Image, ImageTk
 
+from player import Coin
+
 import matplotlib.pyplot as plt
 import numpy as np
 import UI_widgets as ui
@@ -41,8 +43,8 @@ class View:
         buff.seek(0)
         return Image.open(buff)
 
-    def reset(self):
-        if self.miniWindow is not None:
+    def reset(self, killWindow=True):
+        if self.miniWindow is not None and killWindow:
             self.miniWindow.destroy()
         for child in self.root.winfo_children():
             child.destroy()
@@ -55,7 +57,7 @@ class View:
         plt.clf()
         self.reset()
 
-        self.root.after(0, self.main, "dkk")
+        self.root.after(0, self.run, "dkk")
         self.root.mainloop()
 
 #lav new_window om til to funktioner, en for hver knap
@@ -72,7 +74,7 @@ class View:
         new_label.grid(row=0, column=0)
 
         self.miniWindow.resizable(False, False)
-        self.miniWindow.mainloop()
+        
 
     def start_move(self, event, win):
         win.x = event.x
@@ -90,12 +92,126 @@ class View:
         shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
         win.after(1, self.winShadow, win, shdw)
 
+    
+    def process_transaction(self, amount_input, action):
+        input_data = amount_input.get().strip()
+        
+
+
+        if not input_data:
+            print("Empty")
+            return
+        
+        try:
+            amount = int(input_data)
+            if amount <= 0:
+                print("Must be greater than zero")
+                return
+            
+            coin_name = list(self.controller.all_coins.keys())[self.cIndex]
+            coin_data = self.controller.all_coins[coin_name].meta
+            coin_price = coin_data["current_price"]
+            player = self.controller.current_player
+
+            if action == "buy":
+                total_cost = amount * coin_price
+
+                if player.money >= total_cost:
+                    player.invest(Coin(coin_name, coin_price), amount)
+                    print("succes buy")
+                else:
+                    print("not enough money")
+
+            elif action == "sell":
+                if coin_name in player.coins and player.coins[coin_name]["amount"] >= amount:
+                    player.sell(Coin(coin_name, coin_price), amount)
+                    print("succes sell")
+                else:
+                    print("not enough coin")
+
+
+
+        except ValueError:
+            print("Invalid input")    
+        
+
+        plt.clf()
+        self.reset(killWindow=False)
+
+        self.root.after(0, self.run, "dkk")
+        self.root.mainloop()
+        
     def crypto_owned_window(self):
-        self.new_window("crypto coins owned", True)
-        crypto_text=Label(self.miniWindow, text="BTC: 100")
-        crypto_text.grid(row=1, column=0, sticky="nw")
-       
+        self.new_window("Crypto Coins Owned", True)
+        player_coins = self.controller.current_player.coins
+
+        container = Frame(self.miniWindow)
+        container.grid(row=1, column=0, sticky="nsew")
+
+        canvas = Canvas(container, highlightthickness=0)
+        canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = Scrollbar(container, orient=VERTICAL, command=canvas.yview)
+        scrollbar.grid(row=0, column=1, sticky="ns")  
+
+        scrollable_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+        
+        def on_frame_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        scrollable_frame.bind("<Configure>", on_frame_configure)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        
+        def _on_mouse_wheel(event):
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+        self.miniWindow.bind("<MouseWheel>", _on_mouse_wheel)  
+        
+        for i, coin in enumerate(player_coins.values(), start=1):
+            coin_label = Label(scrollable_frame, text=f"{coin['type']}: {coin['amount']}", font=("Calibri", 14))
+            coin_label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+
+        
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
         self.miniWindow.mainloop()
+
+
+    """def crypto_owned_window(self):
+        self.new_window("crypto coins owned", True)
+        player_coins = self.controller.current_player.coins
+
+        frame = Frame(self.miniWindow)
+        frame.grid(row=1, column=0, sticky="nsew")
+
+        canvas = Canvas(frame)
+        canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = Scrollbar(frame, orient="vertical", command=canvas.yview)
+        scrollbar.grid(row=0, column= 1, sticky="ns")
+
+        content_frame = Frame(canvas)
+
+        content_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+
+
+        i=1
+        for coin in player_coins.values():
+            coin_label = Label(self.miniWindow, text=f"{coin['type']}: {coin['amount']}")
+            coin_label.grid(row=i, column=0, sticky="nw", pady= 10)
+            i +=1
+
+        frame.grid_rowconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
+
+        self.miniWindow.mainloop()"""
+
 
     def buy_sell_window(self):
         self.new_window("buy/sell", True)
@@ -103,14 +219,17 @@ class View:
         amount_input = Entry(self.miniWindow)
         amount_input.grid(row=1, column=0)
 
-        buy_button = Button(self.miniWindow, text="Buy")
+
+        buy_button = Button(self.miniWindow, text="Buy", command=lambda: self.process_transaction(amount_input, "buy"))
         buy_button.grid(row=2, column=0, sticky="nw")
 
-        sell_button = Button(self.miniWindow, text="Sell")
+        sell_button = Button(self.miniWindow, text="Sell", command=lambda: self.process_transaction(amount_input, "sell"))
         sell_button.grid(row=2, column=0, sticky="ne")
 
         self.miniWindow.mainloop()
 
+
+    
 
     def error_window(self, data):
         win = Toplevel(self.root)
@@ -152,51 +271,12 @@ class View:
 
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
-
-    def choosePlayer(self, inp):
-        item = None
-        if isinstance(inp, ttk.Combobox):
-            item = inp.get()
-        elif isinstance(inp, str):
-            item = inp
-        for i in self.controller.model.players:
-            if i == item:
-                self.controller.current_player = self.controller.model.players[item]
-                break
-
-        self.root.geometry("")
-
-        plt.clf()
-        self.reset()
-        self.main("dkk")
-
-
-    def login(self):
-        self.reset()
-        self.root.geometry("400x400")
-
-        names = [name for name in self.controller.model.players]
-
-        title = Label(self.root, text="Welcome!", font=("Calibri", 35))
-        sub = Label(self.root, text="Select a player", font=("Consolas", 14))
-        cbox = ttk.Combobox(self.root, values=names, state="readonly")
-        btn = Button(self.root, text="Login", font=("Calibri", 15), command=lambda: self.choosePlayer(cbox), pady=2, padx=3)
-
-        title.place(relx=0.5, rely=0.3, anchor="s")
-        sub.place(relx=0.5, rely=0.45, anchor="s")
-        cbox.place(relx=0.5, rely=0.5, anchor="center")
-        btn.place(relx=0.5, rely=0.6, anchor="n")
-
-        self.root.mainloop()
-
-    def run(self, *args, **kwargs):
-        self.login()
-    def main(self, curr):
+    
+    def run(self, curr):
 
         data = self.controller.all_coins
         player = self.controller.current_player
         print(data)
-
 
         names = [i for i in data]
         currentCoin = names[self.cIndex]
@@ -206,18 +286,6 @@ class View:
         buff = self.plotToImg()
         img = ImageTk.PhotoImage(buff)
 
-        menu = Frame(self.root, bd=3)
-        op1 = Menubutton(menu, text="Switch Users", relief="groove")
-        op1.pack()
-
-        op1.menu = Menu(op1, tearoff=0)
-        op1["menu"] = op1.menu
-
-        for i in self.controller.model.players:
-            if i != player.name:
-                k = i
-                op1.menu.add_command(label=i, command=lambda: self.choosePlayer(k))
-
         leftColumn = Frame(self.root)
         infoColumn = Frame(leftColumn, bg="skyblue3")
         uname = Label(leftColumn, text=player.name, padx=10, pady=10, font=("Calibri", 25))
@@ -226,7 +294,8 @@ class View:
 
         blnc = ui.InfoBox(infoColumn, "Balance: ", player.money)
 
-        amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+        #amnt_owned = player.coins[data[currentCoin].meta['name']].amount if data[currentCoin].meta['name'] in player.coins.keys() else "0"
+        amnt_owned = player.coins[data[currentCoin].meta['name']]["amount"] if data[currentCoin].meta['name'] in player.coins else "0"
 
         owned = ui.InfoBox(infoColumn, f"{data[currentCoin].meta['symbol'].upper()} Owned:", amnt_owned)
         day_pct = ui.InfoBox(infoColumn, "24hr change:", f"{data[currentCoin].meta['price_change_percentage_24h']}%")
@@ -239,17 +308,16 @@ class View:
 
         dropdown.bind("<<ComboboxSelected>>", lambda *args: self.update_graph(names, dropdown, *args))
 
-        menu.grid(row=0, column=0, sticky="nw")
-        uname.grid(row=1, column=0)
-        dropdown.grid(row=2, column=0)
-        blnc.grid(row=1, column=0, pady=(5, 0), sticky="nw")
-        owned.grid(row=2, column=0, sticky="nw")
-        day_pct.grid(row=3, column=0, pady=(0, 5), sticky="nw")
-        infoColumn.grid(row=3, column=0, pady=(10, 0))
-        leftColumn.grid(row=1, column=0, sticky="nw", padx=20)
-        c_owned.grid(row=2, column=0, sticky="ne", padx=5, pady=(10, 5))
+        uname.grid(row=0, column=0)
+        dropdown.grid(row=1, column=0)
+        blnc.grid(row=0, column=0, pady=(5, 0), sticky="nw")
+        owned.grid(row=1, column=0, sticky="nw")
+        day_pct.grid(row=2, column=0, pady=(0, 5), sticky="nw")
+        infoColumn.grid(row=2, column=0, pady=(10, 0))
+        leftColumn.grid(row=0, column=0, sticky="nw", padx=20)
+        c_owned.grid(row=1, column=0, sticky="ne", padx=5, pady=(10, 5))
 
-        lb.grid(row=1, column=1)
-        trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
+        lb.grid(row=0, column=1)
+        trade.grid(row=1, column=1, sticky="ne", pady=(10, 0))
 
         self.root.mainloop()
