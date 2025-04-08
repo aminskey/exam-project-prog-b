@@ -30,10 +30,10 @@ class Model:
 
     def updatePlayerData(self):
         for name, p in self.players.items():
-            self.playerData[name] = p.saveData()
+            self.playerData[name] = p.genJSON()
 
     def savePlayer(self, p):
-        self.playerData[p.name] = p.saveData()
+        self.playerData[p.name] = p.genJSON()
 
 
     def load_from_file(self, file):
@@ -51,6 +51,8 @@ class Model:
                 c = Coin(str(coin), cdata["value"])
                 c.amount = cdata["amount"]
                 p.update(c)
+
+                # TODO: Make a queue with updated coin information
             
             self.players[p.name] = p
                 

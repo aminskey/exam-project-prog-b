@@ -36,14 +36,6 @@ class Player:
         self.coins = dict()
         self.history = []
 
-    def update(self, coin):
-
-        """
-        self.coins[coin.type] = coin.saveDict()
-        if coin.amount <= 0:
-            self.coins.pop(coin.type)
-            self.history.append(f"Removing {coin.type.upper()} from {self.name.upper()}'s player data given that {coin.type.upper()}.amount = 0")
-        """
 
     def invest(self, coin: Coin, amount):
         if coin.type not in self.coins:
@@ -76,13 +68,14 @@ class Player:
             return
 
         firstCoin = self.coins[coin.type][0]
-        firstCoin.amount -= amount
+        newAmount = firstCoin.amount - amount
 
-        if firstCoin.amount <= 0:
+        if newAmount <= 0:
             self.coins[coin.type].pop()
             self.money += firstCoin.amount * firstCoin.value
         else:
             self.money += amount * firstCoin.value
+            firstCoin.amount -= amount
 
         """
         old_data = self.coins[new_coin.type]
@@ -109,15 +102,30 @@ class Player:
             print(f"\x1b[{(k%17)+32}m[{k:02}] | {log}\x1b[0m")
 
 
-    def saveData(self):
-        data = {}
+    def genJSON(self):
+        data = {
+            "name": self.name,
+            "money": self.money,
+            "history": self.history
+        }
+
+        for coin in self.coins:
+            q = self.coins[coin]
+            a = []
+
+            for i in q.arr:
+                a.append(i.saveDict())
+
+            data["coins"][coin] = a
+
+        """
         for i in inspect.getmembers(self):
             if not i[0].startswith('_'):
                 if not inspect.ismethod(i[1]):
                     data[i[0]] = i[1]
-
+        """
 
         return data
 
     def __str__(self):
-        return str(self.saveData())
+        return str(self.genJSON())
