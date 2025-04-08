@@ -1,5 +1,6 @@
 import inspect
 
+
 class Coin:
     def __init__(self, type, value, meta=None):
         self.type = type
