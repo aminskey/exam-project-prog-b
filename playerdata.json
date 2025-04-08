@@ -1,11 +1,6 @@
 {
     "Johan": {
         "coins": {
-            "Bitcoin": {
-                "type": "Bitcoin",
-                "value": 585977,
-                "amount": 10
-            },
             "Ethereum": {
                 "type": "Ethereum",
                 "value": 12872.51,
@@ -121,9 +116,12 @@
             "JOHAN invested in TRON. Bought 10 unit(s) for 1.64",
             "JOHAN invested in LIDO STAKED ETHER. Bought 13 unit(s) for 12851.48",
             "JOHAN invested in WRAPPED BITCOIN. Bought 1 unit(s) for 585701",
-            "JOHAN invested in WRAPPED BITCOIN. Bought 3 unit(s) for 585701"
+            "JOHAN invested in WRAPPED BITCOIN. Bought 3 unit(s) for 585701",
+            "JOHAN invested in BITCOIN. Bought 20 unit(s) for 540043",
+            "JOHAN sold 20 unit(s) of BITCOIN for 540043. I.e a profit of 0",
+            "Removing BITCOIN from JOHAN's player data given that BITCOIN.amount = 0"
         ],
-        "money": 11000799.540000003,
+        "money": 16401229.540000003,
         "name": "Johan"
     },
     "Anubhab": {

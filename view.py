@@ -92,12 +92,6 @@ class View:
         shdw.geometry(f"{w}x{h}+{x+15}+{y+30}")
         win.after(1, self.winShadow, win, shdw)
 
-    """def validate_numbers(self, new_entry):
-        input_data = new_entry.get()
-        if input_data:
-            print("not empty")
-        else:
-            print("empty")"""
     
     def process_transaction(self, amount_input, action):
         input_data = amount_input.get().strip()
@@ -147,24 +141,76 @@ class View:
         self.root.after(0, self.run, "dkk")
         self.root.mainloop()
         
-    
-
     def crypto_owned_window(self):
-        self.new_window("crypto coins owned", True)
-        
-
+        self.new_window("Crypto Coins Owned", True)
         player_coins = self.controller.current_player.coins
 
-      
+        container = Frame(self.miniWindow)
+        container.grid(row=1, column=0, sticky="nsew")
+
+        canvas = Canvas(container, highlightthickness=0)
+        canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = Scrollbar(container, orient=VERTICAL, command=canvas.yview)
+        scrollbar.grid(row=0, column=1, sticky="ns")  
+
+        scrollable_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
         
+        def on_frame_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        scrollable_frame.bind("<Configure>", on_frame_configure)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        
+        def _on_mouse_wheel(event):
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+        self.miniWindow.bind("<MouseWheel>", _on_mouse_wheel)  
+        
+        for i, coin in enumerate(player_coins.values(), start=1):
+            coin_label = Label(scrollable_frame, text=f"{coin['type']}: {coin['amount']}", font=("Calibri", 14))
+            coin_label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+
+        
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.miniWindow.mainloop()
+
+
+    """def crypto_owned_window(self):
+        self.new_window("crypto coins owned", True)
+        player_coins = self.controller.current_player.coins
+
+        frame = Frame(self.miniWindow)
+        frame.grid(row=1, column=0, sticky="nsew")
+
+        canvas = Canvas(frame)
+        canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = Scrollbar(frame, orient="vertical", command=canvas.yview)
+        scrollbar.grid(row=0, column= 1, sticky="ns")
+
+        content_frame = Frame(canvas)
+
+        content_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+
 
         i=1
         for coin in player_coins.values():
             coin_label = Label(self.miniWindow, text=f"{coin['type']}: {coin['amount']}")
             coin_label.grid(row=i, column=0, sticky="nw", pady= 10)
             i +=1
-           
-        self.miniWindow.mainloop()
+
+        frame.grid_rowconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
+
+        self.miniWindow.mainloop()"""
 
 
     def buy_sell_window(self):
