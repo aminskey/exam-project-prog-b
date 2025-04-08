@@ -1,5 +1,6 @@
 import inspect
 
+from queue import Queue
 
 class Coin:
     def __init__(self, type, value, meta=None):
@@ -36,13 +37,29 @@ class Player:
         self.history = []
 
     def update(self, coin):
+
+        """
         self.coins[coin.type] = coin.saveDict()
         if coin.amount <= 0:
             self.coins.pop(coin.type)
             self.history.append(f"Removing {coin.type.upper()} from {self.name.upper()}'s player data given that {coin.type.upper()}.amount = 0")
-
+        """
 
     def invest(self, coin: Coin, amount):
+        if coin.type not in self.coins:
+            self.coins[coin.type] = Queue()
+        q = self.coins[coin.type]
+
+        self.money -= amount * coin.value
+        ret = q.seekByAttrVal("value", coin.value)
+        if not ret:
+            coin.amount = amount
+            q.push(coin)
+        else:
+            i, _ = ret
+            q.arr[i].amount += coin.amount
+
+        """
         (oldcoin := Coin(0, 0)).fromDict(self.coins[coin.type])
         coin.amount = amount + oldcoin.amount
 
@@ -50,8 +67,24 @@ class Player:
         self.money -= amount * coin.value
 
         self.history.append(f"{self.name.upper()} invested in {coin.type.upper()}. Bought {coin.amount} unit(s) for {coin.value}")
+        """
 
-    def sell(self, new_coin: Coin, amount):
+    def sell(self, coin: Coin, amount):
+
+        if not coin.type in self.coins:
+            print("Coin type not in self.coins")
+            return
+
+        firstCoin = self.coins[coin.type][0]
+        firstCoin.amount -= amount
+
+        if firstCoin.amount <= 0:
+            self.coins[coin.type].pop()
+            self.money += firstCoin.amount * firstCoin.value
+        else:
+            self.money += amount * firstCoin.value
+
+        """
         old_data = self.coins[new_coin.type]
         (old_coin := Coin(0, 0)).fromDict(old_data)
 
@@ -62,6 +95,7 @@ class Player:
         old_coin.amount -= amount
         old_coin.value = new_coin.value
         self.update(old_coin)
+        """
 
 
     def printLog(self):
