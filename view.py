@@ -251,7 +251,7 @@ class View:
 
         win.bind("<ButtonPress-1>", lambda event: self.start_move(event, win))
         win.bind("<B1-Motion>", lambda event: self.move_win(event, win))
-        win.protocol("WM_DELETE_WINDOW", self.controller.on_closing)
+        win.protocol("WM_DELETE_WINDOW", lambda: self.controller.on_closing(True))
 
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()

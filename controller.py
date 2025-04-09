@@ -11,8 +11,10 @@ class Controller:
 
         self.view.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def on_closing(self):
-        self.model.save_to_file()
+    def on_closing(self, errMode=False):
+        if not errMode:
+            self.model.save_to_file()
+
         self.view.root.destroy()
         quit()
 
