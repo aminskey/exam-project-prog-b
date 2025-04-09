@@ -283,6 +283,7 @@ class View:
         names = [i for i in data]
         currentCoin = names[self.cIndex]
 
+        plt.clf()
         self.reset()
         self.drawPlot(data[currentCoin].meta, curr)
         buff = self.plotToImg()
@@ -333,6 +334,6 @@ class View:
         lb.grid(row=1, column=1)
         trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
-        self.root.after(300000, self.controller.retrieveCoinData)
-        self.root.after(300001, self.controller.main, curr)
+        self.root.after(60000, self.controller.retrieveCoinData)
+        self.root.after(60001, self.main, curr)
         self.root.mainloop()
