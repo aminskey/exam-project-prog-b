@@ -74,9 +74,9 @@ class Player:
 
         if newAmount <= 0:
             self.coins[coin.type].pop()
-            self.money += firstCoin.amount * firstCoin.value
+            self.money += firstCoin.amount * coin.value
         else:
-            self.money += amount * firstCoin.value
+            self.money += amount * coin.value
             firstCoin.amount -= amount
 
         """

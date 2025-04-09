@@ -15,6 +15,7 @@ class View:
         self.controller = None
         self.root = Tk()
         self.cIndex = 0
+        self.chosenPlayer = None
         self.miniWindow = None
 
     def drawPlot(self, data, currency="dkk"):
@@ -236,7 +237,7 @@ class View:
         win.after(0, self.winShadow, win, shdw)
         win.mainloop()
 
-    def choosePlayer(self, inp):
+    def choosePlayer(self, inp, index=None):
         item = None
         if isinstance(inp, ttk.Combobox):
             item = inp.get()
@@ -290,16 +291,15 @@ class View:
         img = ImageTk.PhotoImage(buff)
 
         menu = Frame(self.root, bd=3)
-        op1 = Menubutton(menu, text="Switch Users", relief="groove")
+        op1 = Menubutton(menu, text="Options", relief="groove")
         op1.pack()
 
         op1.menu = Menu(op1, tearoff=0)
         op1["menu"] = op1.menu
 
-        for i in self.controller.model.players:
-            if i != player.name:
-                k = i
-                op1.menu.add_command(label=i, command=lambda: self.choosePlayer(k))
+        op1.menu.add_command(label="Switch User", command=self.login)
+        op1.menu.add_separator()
+        op1.menu.add_command(label="Quit", command=self.controller.on_closing)
 
         leftColumn = Frame(self.root)
         infoColumn = Frame(leftColumn, bg="skyblue3")

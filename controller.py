@@ -35,6 +35,4 @@ class Controller:
         self.model.load_coins(data)
         self.all_coins = self.model.get_coins()
 
-        self.current_player = self.model.players[next(iter(self.model.players))]
-
         self.view.run(curr)
