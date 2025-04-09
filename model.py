@@ -1,4 +1,6 @@
 import json
+import traceback
+
 import requests
 
 from player import Player, Coin
@@ -76,15 +78,24 @@ class Model:
             "sparkline": "true"
         }
 
-        response = requests.get(url, params=parameters)
-        if response.status_code == 200:
-            data = response.json()
-            return data
+        try:
+            response = requests.get(url, params=parameters)
+            response.raise_for_status()
 
-        self.get_err_codes()
-        st_code = self.codes[f"{response.status_code}"]
+            if response.status_code == 200:
+                data = response.json()
+                return data
 
-        return dict(error=f"{response.status_code}: {st_code['message']}", msg=f"{st_code['description']}")
+            self.get_err_codes()
+            st_code = self.codes[f"{response.status_code}"]
+
+            return dict(error=f"{response.status_code}: {st_code['message']}", msg=f"{st_code['description']}")
+
+        except requests.exceptions.ConnectionError:
+            return dict(error="Exception: Connection Error", msg=f"Could not connect to {url}. Maybe incorrect DNS, or refused to connect...")
+        except Exception as e:
+            err = traceback.format_exc()
+            return dict(error=f"Exception:", msg=f"{e} {err}")
 
     # Parsing data from coingecko, and creating corresponding coin objects.
     def load_coins(self, data):

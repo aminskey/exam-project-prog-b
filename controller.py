@@ -25,7 +25,7 @@ class Controller:
 
         if "error" in data:
             # Print error message with appropriate formatting (RED and BOLD).
-            print("\x1b[31m\x1b[1mError: {}".format(data["error"]), end="\x1b[0m\x1b[22m\n")
+            print("\x1b[31m\x1b[1mError: {} {}".format(data["error"], data["msg"]), end="\x1b[0m\x1b[22m\n")
             self.view.error_window(data)
             # return -1
         self.model.load_coins(data)

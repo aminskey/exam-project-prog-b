@@ -216,10 +216,29 @@ class View:
         exitico = ImageTk.PhotoImage(crs)
 
         icon = Label(content, image=img)
-        icon.pack(side="left", pady=10, padx=10)
+        icon.grid(row=0, column=0, pady=10, padx=10)
 
-        msg = Label(content, text=f"{data['msg']}", font=("Tahoma", 16))
-        msg.pack(side="right")
+
+        message = Frame(content)
+
+        if len(data['msg'].split()) < 4:
+            msg = Label(message, text=f"{data['msg']}", font=("Tahoma", 11))
+            msg.grid(row=0, column=0, padx=(10, 0), sticky="nw")
+        else:
+            tmp = ""
+            j = 0
+            i = 0
+            for word in data['msg'].split():
+                tmp += word + " "
+                if (i % 4 == 0 and i > 0) or i >= len(data['msg'].split()) - 1:
+                    msg = Label(message, text=f"{tmp}", font=("Tahoma", 11))
+                    msg.grid(row=j, column=0, padx=(10, 0), sticky="nw")
+
+                    tmp = ""
+                    j += 1
+                i += 1
+
+        message.grid(row=0, column=1, sticky="nw")
 
         t1 = Label(title_bar, text=data["error"], bg="blue", fg="white", font=("Tahoma", 12))
         t1.pack(side="left")
