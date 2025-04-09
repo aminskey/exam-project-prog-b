@@ -276,11 +276,9 @@ class View:
     def run(self, *args, **kwargs):
         self.login()
     def main(self, curr):
-
         data = self.controller.all_coins
         player = self.controller.current_player
         print(data)
-
 
         names = [i for i in data]
         currentCoin = names[self.cIndex]
@@ -335,4 +333,6 @@ class View:
         lb.grid(row=1, column=1)
         trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
+        self.root.after(300000, self.controller.retrieveCoinData)
+        self.root.after(300001, self.controller.main, curr)
         self.root.mainloop()

@@ -45,18 +45,14 @@
     },
     "Mohamed": {
         "name": "Mohamed",
-        "money": 1.3600000000000012,
-        "history": [],
+        "money": 10.000000000000002,
+        "history": [
+            "MOHAMED sold 2 unit(s) of CARDANO for 4.32. I.e a profit of 0.0"
+        ],
         "coins": {
             "The Graph": [],
             "Movement": [],
-            "Cardano": [
-                {
-                    "type": "Cardano",
-                    "value": 4.32,
-                    "amount": 2
-                }
-            ]
+            "Cardano": []
         }
     }
 }
