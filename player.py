@@ -63,8 +63,9 @@ class Player:
             i, _ = ret
             q.arr[i].amount += coin.amount
 
-    def sell(self, coin: Coin, amount):
+        self.history.append(f"{self.name.upper()} bought {amount} unit(s) of {coin.type} for a price of {coin.value} pr. coin.")
 
+    def sell(self, coin: Coin, amount):
         if not coin.type in self.coins:
             print("Coin type not in self.coins")
             return
@@ -75,22 +76,14 @@ class Player:
         if newAmount <= 0:
             self.coins[coin.type].pop()
             self.money += firstCoin.amount * coin.value
+            finalAmount = firstCoin.amount
         else:
             self.money += amount * coin.value
             firstCoin.amount -= amount
+            finalAmount = amount
 
-        """
-        old_data = self.coins[new_coin.type]
-        (old_coin := Coin(0, 0)).fromDict(old_data)
-
-        self.money += amount * new_coin.value
-
-        self.history.append(f"{self.name.upper()} sold {amount} unit(s) of {old_coin.type.upper()} for {new_coin.value}. I.e a profit of {amount * new_coin.value - amount * old_coin.value}")
-
-        old_coin.amount -= amount
-        old_coin.value = new_coin.value
-        self.update(old_coin)
-        """
+        self.history.append(
+            f"{self.name.upper()} sold {finalAmount} unit(s) of {firstCoin.type.upper()} for {coin.value}. I.e a profit of {amount * coin.value - amount * firstCoin.value}")
 
 
     def printLog(self):
