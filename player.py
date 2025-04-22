@@ -61,7 +61,7 @@ class Player:
         else:
             print("return true")
             i, _ = ret
-            q.arr[i].amount += coin.amount
+            q.arr[i].amount += coin.amount # Something sketchy here....
 
         self.history.append(f"{self.name.upper()} bought {amount} unit(s) of {coin.type} for a price of {coin.value} pr. coin.")
 
