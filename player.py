@@ -53,15 +53,18 @@ class Player:
         q = self.coins[coin.type]
 
         self.money -= amount * coin.value
+
+        coin.amount = amount
+
         ret = q.seekByAttrVal("value", coin.value)
         if not ret:
             print("no return...")
-            coin.amount = amount
+            "coin.amount = amount"
             q.push(coin)
         else:
             print("return true")
             i, _ = ret
-            q.arr[i].amount += coin.amount # Something sketchy here....
+            q.arr[i].amount += coin.amount
 
         self.history.append(f"{self.name.upper()} bought {amount} unit(s) of {coin.type} for a price of {coin.value} pr. coin.")
 

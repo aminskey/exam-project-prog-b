@@ -1,14 +1,16 @@
 {
     "Johan": {
         "name": "Johan",
-        "money": 941804.5800000001,
+        "money": 921944.3800000001,
         "history": [
             "JOHAN invested in TEMPCOIN. Bought 7 unit(s) for 500",
             "JOHAN sold 7 unit(s) of TEMPCOIN for 629. I.e a profit of 903",
             "Removing TEMPCOIN from JOHAN's player data given that TEMPCOIN.amount = 0",
             "JOHAN bought 10 unit(s) of BNB for a price of 3939.98 pr. coin.",
             "JOHAN bought 2 unit(s) of BNB for a price of 3939.98 pr. coin.",
-            "JOHAN bought 3 unit(s) of BNB for a price of 3939.98 pr. coin."
+            "JOHAN bought 3 unit(s) of BNB for a price of 3939.98 pr. coin.",
+            "JOHAN bought 2 unit(s) of BNB for a price of 3972.04 pr. coin.",
+            "JOHAN bought 3 unit(s) of BNB for a price of 3972.04 pr. coin."
         ],
         "coins": {
             "Cardano": [],
@@ -18,6 +20,11 @@
                     "type": "BNB",
                     "value": 3939.98,
                     "amount": 10
+                },
+                {
+                    "type": "BNB",
+                    "value": 3972.04,
+                    "amount": 5
                 }
             ]
         }
