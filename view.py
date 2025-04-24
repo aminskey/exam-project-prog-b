@@ -58,6 +58,7 @@ class View:
         plt.clf()
         self.reset()
 
+
         self.root.after(0, self.main, "dkk")
         self.root.mainloop()
 
@@ -278,6 +279,7 @@ class View:
 
         plt.clf()
         self.reset()
+        self.updateCoins()
         self.main("dkk")
 
 
@@ -299,6 +301,10 @@ class View:
 
         self.root.mainloop()
 
+    def updateCoins(self):
+        self.controller.retrieveCoinData()
+        self.root.after(63001, self.updateCoins)
+
     def run(self, *args, **kwargs):
         self.login()
     def main(self, curr):
@@ -312,6 +318,7 @@ class View:
         plt.clf()
         self.reset()
         self.drawPlot(data[currentCoin].meta, curr)
+
         buff = self.plotToImg()
         img = ImageTk.PhotoImage(buff)
 
@@ -360,6 +367,5 @@ class View:
         lb.grid(row=1, column=1)
         trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
-        self.root.after(1800000, self.controller.retrieveCoinData)
-        self.root.after(1800001, self.main, curr)
+        self.root.after(63000, self.main, curr)
         self.root.mainloop()

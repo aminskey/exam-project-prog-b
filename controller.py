@@ -6,15 +6,16 @@ class Controller:
         self.model.controller = self
         self.view.controller = self
         self.datafile = "playerdata.json"
+        self.backupFile = "_backup_data.json"
         self.current_player = None
         self.all_coins = None
 
         self.view.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def on_closing(self, errMode=False):
-        if not errMode:
-            self.model.save_to_file()
-
+        # if method calling is not error window
+        #if not errMode:
+        self.model.save_to_file()
         self.view.root.destroy()
         quit()
 
@@ -22,8 +23,12 @@ class Controller:
         tmp = [i for i in self.model.get_coins().items()]
         return tmp
 
-    def retrieveCoinData(self):
+    def retrieveCoinData(self, save_bckp=True):
+        print("Retrieving coin data from CoinGecko")
         data = self.model.get_data()
+
+        if save_bckp:
+            self.model.save_to_file("_backup_data.json")
 
         if "error" in data:
             # Print error message with appropriate formatting (RED and BOLD).
@@ -35,10 +40,11 @@ class Controller:
 
     def run(self, curr="dkk"):
 
-        self.retrieveCoinData()
+        self.retrieveCoinData(False)
 
         # if no error in the code then load all data and run
-        self.model.load_from_file(self.datafile)
+        if not self.model.load_from_file(self.datafile):
+            self.model.load_from_file(self.backupFile)
         self.all_coins = self.model.get_coins()
 
         self.view.run(curr)
