@@ -360,6 +360,6 @@ class View:
         lb.grid(row=1, column=1)
         trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
-        self.root.after(60000, self.controller.retrieveCoinData)
-        self.root.after(60001, self.main, curr)
+        self.root.after(1800000, self.controller.retrieveCoinData)
+        self.root.after(1800001, self.main, curr)
         self.root.mainloop()
