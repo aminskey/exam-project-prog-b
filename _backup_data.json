@@ -1,0 +1,122 @@
+{
+    "Johan": {
+        "name": "Johan",
+        "money": 925316.2600000001,
+        "history": [
+            "JOHAN invested in TEMPCOIN. Bought 7 unit(s) for 500",
+            "JOHAN sold 7 unit(s) of TEMPCOIN for 629. I.e a profit of 903",
+            "Removing TEMPCOIN from JOHAN's player data given that TEMPCOIN.amount = 0",
+            "JOHAN bought 10 unit(s) of BNB for a price of 3939.98 pr. coin.",
+            "JOHAN bought 2 unit(s) of BNB for a price of 3939.98 pr. coin.",
+            "JOHAN bought 3 unit(s) of BNB for a price of 3939.98 pr. coin.",
+            "JOHAN bought 2 unit(s) of BNB for a price of 3972.04 pr. coin.",
+            "JOHAN bought 3 unit(s) of BNB for a price of 3972.04 pr. coin.",
+            "JOHAN sold 3 unit(s) of BNB for 3928.77. I.e a profit of -33.63000000000102",
+            "JOHAN sold 5 unit(s) of BNB for 3928.77. I.e a profit of -56.05000000000291",
+            "JOHAN bought 12 unit(s) of Bittensor for a price of 2338.19 pr. coin."
+        ],
+        "coins": {
+            "Cardano": [],
+            "TRON": [],
+            "BNB": [
+                {
+                    "type": "BNB",
+                    "value": 3939.98,
+                    "amount": 2
+                },
+                {
+                    "type": "BNB",
+                    "value": 3972.04,
+                    "amount": 5
+                }
+            ],
+            "Bittensor": [
+                {
+                    "type": "Bittensor",
+                    "value": 2338.19,
+                    "amount": 12
+                }
+            ]
+        }
+    },
+    "Anubhab": {
+        "name": "Anubhab",
+        "money": 93434.31000000003,
+        "history": [
+            "ANUBHAB invested in BYTECOIN. Bought 2 unit(s) for 1900",
+            "ANUBHAB sold 1 unit(s) of BYTECOIN for 1400. I.e a profit of -500",
+            "ANUBHAB sold 5 unit(s) of SOLANA for 815.32. I.e a profit of 14.450000000000728",
+            "ANUBHAB bought 1 unit(s) of BNB for a price of 3922.6 pr. coin.",
+            "ANUBHAB bought 3 unit(s) of TRON for a price of 1.62 pr. coin.",
+            "ANUBHAB bought 2 unit(s) of Avalanche for a price of 146.04 pr. coin.",
+            "ANUBHAB bought 3 unit(s) of LEO Token for a price of 60.53 pr. coin.",
+            "ANUBHAB bought 5 unit(s) of Hedera for a price of 1.23 pr. coin.",
+            "ANUBHAB bought 4 unit(s) of Pi Network for a price of 4.26 pr. coin.",
+            "ANUBHAB sold 350 unit(s) of DOGECOIN for 1.19. I.e a profit of 33.94999999999999",
+            "ANUBHAB sold 100 unit(s) of USDC for 6.55. I.e a profit of -27.0",
+            "ANUBHAB sold 2 unit(s) of AVALANCHE for 145.94. I.e a profit of -0.19999999999998863",
+            "ANUBHAB bought 9 unit(s) of USDS for a price of 6.56 pr. coin.",
+            "ANUBHAB sold 9 unit(s) of USDS for 6.56. I.e a profit of 0.0"
+        ],
+        "coins": {
+            "Solana": [],
+            "USDC": [],
+            "Dogecoin": [
+                {
+                    "type": "Dogecoin",
+                    "value": 1.093,
+                    "amount": 50
+                }
+            ],
+            "BNB": [
+                {
+                    "type": "BNB",
+                    "value": 3922.6,
+                    "amount": 1
+                }
+            ],
+            "TRON": [
+                {
+                    "type": "TRON",
+                    "value": 1.62,
+                    "amount": 3
+                }
+            ],
+            "Avalanche": [],
+            "LEO Token": [
+                {
+                    "type": "LEO Token",
+                    "value": 60.53,
+                    "amount": 3
+                }
+            ],
+            "Hedera": [
+                {
+                    "type": "Hedera",
+                    "value": 1.23,
+                    "amount": 5
+                }
+            ],
+            "Pi Network": [
+                {
+                    "type": "Pi Network",
+                    "value": 4.26,
+                    "amount": 4
+                }
+            ],
+            "USDS": []
+        }
+    },
+    "Mohamed": {
+        "name": "Mohamed",
+        "money": 10.000000000000002,
+        "history": [
+            "MOHAMED sold 2 unit(s) of CARDANO for 4.32. I.e a profit of 0.0"
+        ],
+        "coins": {
+            "The Graph": [],
+            "Movement": [],
+            "Cardano": []
+        }
+    }
+}
