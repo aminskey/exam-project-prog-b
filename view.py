@@ -139,7 +139,7 @@ class View:
         self.root.mainloop()
         
     def crypto_owned_window(self):
-        self.new_window("Crypto Coins Owned", True)
+        self.new_window("Crypto Coins Owned", False)
         player_coins = self.controller.current_player.coins
 
         container = Frame(self.miniWindow)
@@ -155,7 +155,7 @@ class View:
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
 
         
-        def on_frame_configure(event):
+        def on_frame_configure(*args):
             canvas.configure(scrollregion=canvas.bbox("all"))
 
         scrollable_frame.bind("<Configure>", on_frame_configure)
