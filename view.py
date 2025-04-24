@@ -61,8 +61,6 @@ class View:
         self.root.after(0, self.main, "dkk")
         self.root.mainloop()
 
-#lav new_window om til to funktioner, en for hver knap
-
     def new_window(self, title="window", geoSet=False):
         if self.miniWindow is not None:
             self.miniWindow.destroy() 
@@ -181,18 +179,27 @@ class View:
 
 
     def buy_sell_window(self):
-        self.new_window("buy/sell", True)
+        self.new_window("Buy or Sell stocks", False)
 
-        amount_input = Entry(self.miniWindow)
+        frm = Frame(self.miniWindow)
+
+        coin = list(self.controller.all_coins.keys())[self.cIndex]
+        symbol = self.controller.all_coins[coin].meta["symbol"].upper()
+
+        lbl = Label(self.miniWindow, text=symbol, font=("Calibri", 16))
+
+        amount_input = Entry(frm)
         amount_input.grid(row=1, column=0)
 
 
-        buy_button = Button(self.miniWindow, text="Buy", command=lambda: self.process_transaction(amount_input, "buy"))
+        buy_button = Button(frm, text="Buy", command=lambda: self.process_transaction(amount_input, "buy"))
         buy_button.grid(row=2, column=0, sticky="nw")
 
-        sell_button = Button(self.miniWindow, text="Sell", command=lambda: self.process_transaction(amount_input, "sell"))
+        sell_button = Button(frm, text="Sell", command=lambda: self.process_transaction(amount_input, "sell"))
         sell_button.grid(row=2, column=0, sticky="ne")
 
+        lbl.grid(row=1, column=0, sticky="nw")
+        frm.grid(row=1, column=0, sticky="ne", padx=10, pady=10)
         self.miniWindow.mainloop()
 
 
