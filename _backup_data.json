@@ -41,7 +41,7 @@
     },
     "Anubhab": {
         "name": "Anubhab",
-        "money": 93434.31000000003,
+        "money": 93198.72126000002,
         "history": [
             "ANUBHAB invested in BYTECOIN. Bought 2 unit(s) for 1900",
             "ANUBHAB sold 1 unit(s) of BYTECOIN for 1400. I.e a profit of -500",
@@ -56,7 +56,9 @@
             "ANUBHAB sold 100 unit(s) of USDC for 6.55. I.e a profit of -27.0",
             "ANUBHAB sold 2 unit(s) of AVALANCHE for 145.94. I.e a profit of -0.19999999999998863",
             "ANUBHAB bought 9 unit(s) of USDS for a price of 6.56 pr. coin.",
-            "ANUBHAB sold 9 unit(s) of USDS for 6.56. I.e a profit of 0.0"
+            "ANUBHAB sold 9 unit(s) of USDS for 6.56. I.e a profit of 0.0",
+            "ANUBHAB bought 1000 unit(s) of Shiba Inu for a price of 8.874e-05 pr. coin.",
+            "ANUBHAB bought 10 unit(s) of Sui for a price of 23.55 pr. coin."
         ],
         "coins": {
             "Solana": [],
@@ -104,7 +106,21 @@
                     "amount": 4
                 }
             ],
-            "USDS": []
+            "USDS": [],
+            "Shiba Inu": [
+                {
+                    "type": "Shiba Inu",
+                    "value": 8.874e-05,
+                    "amount": 1000
+                }
+            ],
+            "Sui": [
+                {
+                    "type": "Sui",
+                    "value": 23.55,
+                    "amount": 10
+                }
+            ]
         }
     },
     "Mohamed": {

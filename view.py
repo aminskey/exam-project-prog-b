@@ -17,6 +17,7 @@ class View:
         self.cIndex = 0
         self.chosenPlayer = None
         self.miniWindow = None
+        self.jobIDs = []
 
     def drawPlot(self, data, currency="dkk"):
         sparkline = data["sparkline_in_7d"]["price"]
@@ -315,6 +316,9 @@ class View:
         names = [i for i in data]
         currentCoin = names[self.cIndex]
 
+        for job in self.jobIDs:
+            self.root.after_cancel(job)
+
         plt.clf()
         self.reset()
         self.drawPlot(data[currentCoin].meta, curr)
@@ -367,5 +371,5 @@ class View:
         lb.grid(row=1, column=1)
         trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
-        self.root.after(63000, self.main, curr)
+        self.jobIDs.append(self.root.after(63000, self.main, curr))
         self.root.mainloop()
