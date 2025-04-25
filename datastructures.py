@@ -39,16 +39,6 @@ class Queue:
 
         return l
 
-    """
-    def seekAllByAttrVal(self, attr, val):
-        l = self.seekAllByAttr(attr)
-        d = []
-        for i in l:
-            if getattr(l, attr) == val:
-                d.append(i)
-        return d
-    """
-
     def pop(self):
         v = self.__arr[0]
         self.__arr = self.__arr[1:]

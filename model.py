@@ -107,7 +107,3 @@ class Model:
                 meta=coin_data
             )
             self.__coins[coin.type] = coin
-
-    # TODO: [11-03-25] Implement a method to load playerdata for all players and create Player objects
-    # TODO: [11-03-25] Implement a method to save playerdata for all the players
-    # TODO: [11-03-25] Add self.controller

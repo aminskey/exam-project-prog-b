@@ -13,8 +13,6 @@ class Controller:
         self.view.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def on_closing(self, errMode=False):
-        # if method calling is not error window
-        #if not errMode:
         self.model.save_to_file()
         self.view.root.destroy()
         quit()
@@ -34,7 +32,6 @@ class Controller:
             # Print error message with appropriate formatting (RED and BOLD).
             print("\x1b[31m\x1b[1mError: {} {}".format(data["error"], data["msg"]), end="\x1b[0m\x1b[22m\n")
             self.view.error_window(data)
-            # return -1
         self.model.load_coins(data)
 
 
@@ -42,9 +39,10 @@ class Controller:
 
         self.retrieveCoinData(False)
 
-        # if no error in the code then load all data and run
+        # if the playerdata.json file is corrupted, then load all backup data and run
         if not self.model.load_from_file(self.datafile):
             self.model.load_from_file(self.backupFile)
+
         self.all_coins = self.model.get_coins()
 
         self.view.run(curr)
