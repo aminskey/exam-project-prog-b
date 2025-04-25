@@ -59,7 +59,6 @@ class Player:
         ret = q.seekByAttrVal("value", coin.value)
         if not ret:
             print("no return...")
-            "coin.amount = amount"
             q.push(coin)
         else:
             print("return true")
