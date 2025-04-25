@@ -17,6 +17,7 @@ class View:
         self.cIndex = 0
         self.chosenPlayer = None
         self.miniWindow = None
+        self.jobIDs = []
 
     def drawPlot(self, data, currency="dkk"):
         sparkline = data["sparkline_in_7d"]["price"]
@@ -57,6 +58,7 @@ class View:
 
         plt.clf()
         self.reset()
+
 
         self.root.after(0, self.main, "dkk")
         self.root.mainloop()
@@ -278,6 +280,7 @@ class View:
 
         plt.clf()
         self.reset()
+        self.updateCoins()
         self.main("dkk")
 
 
@@ -299,6 +302,10 @@ class View:
 
         self.root.mainloop()
 
+    def updateCoins(self):
+        self.controller.retrieveCoinData()
+        self.root.after(63001, self.updateCoins)
+
     def run(self, *args, **kwargs):
         self.login()
     def main(self, curr):
@@ -309,9 +316,13 @@ class View:
         names = [i for i in data]
         currentCoin = names[self.cIndex]
 
+        for job in self.jobIDs:
+            self.root.after_cancel(job)
+
         plt.clf()
         self.reset()
         self.drawPlot(data[currentCoin].meta, curr)
+
         buff = self.plotToImg()
         img = ImageTk.PhotoImage(buff)
 
@@ -360,6 +371,5 @@ class View:
         lb.grid(row=1, column=1)
         trade.grid(row=2, column=1, sticky="ne", pady=(10, 0))
 
-        self.root.after(1800000, self.controller.retrieveCoinData)
-        self.root.after(1800001, self.main, curr)
+        self.jobIDs.append(self.root.after(63000, self.main, curr))
         self.root.mainloop()

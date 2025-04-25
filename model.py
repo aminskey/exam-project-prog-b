@@ -44,6 +44,9 @@ class Model:
             tmp = json.load(f)
             f.close()        
 
+        if not tmp:
+            print(f"\x1b[42mFile {file} empty\x1b[0m")
+            return False
 
         for player, data in tmp.items():
             p = Player(data["name"], data["money"])
@@ -57,17 +60,15 @@ class Model:
                     c.amount = coin["amount"]
                     q.push(c)
                 p.coins[key] = q
-
-
-                # TODO: Make a queue with updated coin information
             
             self.players[p.name] = p
+        return True
                 
 
 
-    def save_to_file(self):
+    def save_to_file(self, file="playerdata.json"):
         self.updatePlayerData()
-        with open("playerdata.json", "w") as f:
+        with open(file, "w") as f:
             f.write(json.dumps(self.playerData, indent=4))
             f.close()
 
@@ -92,7 +93,7 @@ class Model:
             return dict(error=f"{response.status_code}: {st_code['message']}", msg=f"{st_code['description']}")
 
         except requests.exceptions.ConnectionError:
-            return dict(error="Exception: Connection Error", msg=f"Could not connect to {url}. Maybe incorrect DNS, or refused to connect...")
+            return dict(error="Exception: Connection Error", msg=f"Could not connect to {url}. Refused to connect...")
         except Exception as e:
             err = traceback.format_exc()
             return dict(error=f"Exception:", msg=f"{e} {err}")
